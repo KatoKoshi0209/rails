@@ -1,3 +1,5 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  devise_for :users # devise を使用する際に URL として users を含む
+  get 'homes/about', to: 'homes#about', as: 'about'
+  root to: "homes#top"
 end
