@@ -1,2 +1,35 @@
-<h1>Attendances#new</h1>
-<p>Find me in app/views/attendances/new.html.erb</p>
+<h2 class="text-center my-4"><%= current_user.name %> さん</h2>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h1 class="display-4 p-3 bg-light rounded shadow" id='myClock'></h1>
+    </div>
+  </div>
+
+  <!-- 勤怠ボタン -->
+  <div class="row justify-content-center mt-3">
+    <div class="col-md-6">
+      <%= form_with model: @attendance, url: attendances_path, method: :post, id: 'attendance_form', class: "text-center" do |f| %>
+        <div class="d-grid gap-2">
+          <%= f.button '出勤', id: 'attendance_button', class: 'btn btn-lg btn-primary' %>
+          <%= f.button '休憩開始', id: 'break_start_button', class: 'btn btn-lg btn-warning' %>
+          <%= f.button '休憩終了', id: 'break_end_button', class: 'btn btn-lg btn-info' %>
+          <%= f.button '退勤', id: 'leave_button', class: 'btn btn-lg btn-secondary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  function updateClock() {
+    var now = new Date();
+    var hour = now.getHours().toString().padStart(2, '0');
+    var minute = now.getMinutes().toString().padStart(2, '0');
+    var second = now.getSeconds().toString().padStart(2, '0');
+    document.getElementById('myClock').innerHTML = hour + ":" + minute + ":" + second;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+</script>
