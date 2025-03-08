@@ -7,17 +7,46 @@
     </div>
   </div>
 
+  <% if flash[:notice] %>
+    <div class="alert alert-success text-center">
+      <%= flash[:notice] %>
+    </div>
+  <% elsif flash[:alert] %>
+    <div class="alert alert-danger text-center">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+
+  <div id="message" class="text-center text-success"></div>
+
   <!-- 勤怠ボタン -->
   <div class="row justify-content-center mt-3">
     <div class="col-md-6">
-      <%= form_with model: @attendance, url: attendances_path, method: :post, id: 'attendance_form', class: "text-center" do |f| %>
-        <div class="d-grid gap-2">
-          <%= f.button '出勤', id: 'attendance_button', class: 'btn btn-lg btn-primary' %>
-          <%= f.button '休憩開始', id: 'break_start_button', class: 'btn btn-lg btn-warning' %>
-          <%= f.button '休憩終了', id: 'break_end_button', class: 'btn btn-lg btn-info' %>
-          <%= f.button '退勤', id: 'leave_button', class: 'btn btn-lg btn-secondary' %>
-        </div>
-      <% end %>
+      <div class="d-flex justify-content-between gap-1">
+        <!-- 出勤ボタン -->
+        <%= form_with model: @attendance, class: "text-center" do |f| %>
+          <%= f.hidden_field :attendance_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
+          <%= f.submit '出勤', id: "attendanceButton", class: 'btn btn-lg btn-primary' %>
+        <% end %>
+
+        <!-- 休憩開始ボタン -->
+        <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
+          <%= f.hidden_field :break_start_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
+          <%= f.submit '休憩開始', id: "breakStartButton", class: 'btn btn-lg btn-warning' %>
+        <% end %>
+
+        <!-- 休憩終了ボタン -->
+        <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
+          <%= f.hidden_field :break_end_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
+          <%= f.submit '休憩終了', id: "breakEndButton", class: 'btn btn-lg btn-info' %>
+        <% end %>
+
+        <!-- 退勤ボタン -->
+        <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
+          <%= f.hidden_field :leave_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
+          <%= f.submit '退勤', id: "leaveButton", class: 'btn btn-lg btn-secondary' %>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
@@ -32,4 +61,95 @@
   }
   setInterval(updateClock, 1000);
   updateClock();
+
+  function getDistance(lat1, lon1, lat2, lon2) {
+    // Haversine formula for distance calculation
+    const R = 6371000; // Earth radius in meters
+    const φ1 = lat1 * Math.PI / 180;
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in meters
+    return distance;
+  }
+
+  function checkLocation() {
+    const officeLat = 34.723985;
+    const officeLon = 135.492479;
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+
+        const distance = getDistance(userLat, userLon, officeLat, officeLon);
+
+        if (distance > 2000) {
+          disableAllButtons();
+          document.getElementById("message").innerHTML = "お店から2000m以内でなければ登録できません。";
+          
+          document.getElementById("message").classList.remove("text-success");
+          document.getElementById("message").classList.add("text-danger");
+        } else {
+          // 範囲内の場合、すべてのボタンを有効化
+          enableAllButtons();
+          document.getElementById("message").innerHTML = "お店の範囲内です。登録可能";
+          
+          document.getElementById("message").classList.remove("text-danger");
+          document.getElementById("message").classList.add("text-success");
+        }
+      }, function(error) {
+        console.log(error);
+        // 位置情報取得に失敗した場合の処理
+        disableAllButtons();
+        document.getElementById("message").innerHTML = "位置情報の取得に失敗しました。位置情報を許可してください。";
+        
+        document.getElementById("message").classList.remove("text-success");
+        document.getElementById("message").classList.add("text-danger");
+      }, { enableHighAccuracy: true });
+    } else {
+      console.log("位置情報の取得がサポートされていません");
+      // 位置情報取得がサポートされていない場合の処理
+      disableAllButtons();
+      document.getElementById("message").innerHTML = "位置情報がサポートされていません。オーナーに連絡してください。";
+      
+      document.getElementById("message").classList.remove("text-success");
+      document.getElementById("message").classList.add("text-danger");
+    }
+  }
+
+  // すべてのボタンを無効化する関数
+  function disableAllButtons() {
+    document.getElementById("attendanceButton").disabled = true;
+    document.getElementById("breakStartButton").disabled = true;
+    document.getElementById("breakEndButton").disabled = true;
+    document.getElementById("leaveButton").disabled = true;
+
+    // メッセージのクラス変更
+    document.getElementById("message").classList.remove("text-success");
+    document.getElementById("message").classList.add("text-danger");
+  }
+
+  // すべてのボタンを有効化する関数
+  function enableAllButtons() {
+    document.getElementById("attendanceButton").disabled = false;
+    document.getElementById("breakStartButton").disabled = false;
+    document.getElementById("breakEndButton").disabled = false;
+    document.getElementById("leaveButton").disabled = false;
+
+    // メッセージのクラス変更
+    document.getElementById("message").classList.remove("text-danger");
+    document.getElementById("message").classList.add("text-success");
+  }
+
+  // Call the function on page load
+  window.onload = function() {
+    checkLocation();
+  };
+
 </script>
