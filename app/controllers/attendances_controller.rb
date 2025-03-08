@@ -56,8 +56,14 @@ class AttendancesController < ApplicationController
   
     now = Time.zone.now.strftime('%Y-%m-%d %H:%M:%S')
 
-    if attendance.break_end_time.present?
+    if attendance.break_end_time.present? && params[:attendance][:break_start_time].present?
       flash[:alert] = "休憩が終了しているため、休憩を開始できません。"
+      redirect_to request.referer
+      return
+    end
+
+    if attendance.break_end_time.present? && params[:attendance][:break_end_time].present?
+      flash[:alert] = "すでに休憩終了済みです。"
       redirect_to request.referer
       return
     end
