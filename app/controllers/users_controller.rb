@@ -4,6 +4,12 @@ class UsersController < ApplicationController
     
     # 月をパラメータで受け取る (デフォルトは現在月)
     year_month = params[:year_month] || Time.zone.now.strftime("%Y-%m")
+
+    # 年月が正しい形式でない場合はエラー処理を追加
+    unless year_month.match(/\A\d{4}-\d{2}\z/)
+      flash[:alert] = "正しく年月を選択してください"
+      redirect_to user_path(@user) and return
+    end
     year, month = year_month.split('-')
 
     # 選択された月の勤怠履歴を取得

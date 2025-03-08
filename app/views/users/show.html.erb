@@ -18,6 +18,11 @@
       </div>
     </div>
   <% end %>
+  <% if flash[:alert] %>
+    <div class="alert alert-danger text-center">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
 
   <!-- 勤怠履歴テーブル -->
   <div class="table-responsive">
