@@ -9,6 +9,11 @@
       </div>
 
       <div class="mb-3">
+        <label for="inputEmail" class="form-label fw-bold">メールアドレス</label>
+        <%= f.email_field :email, autofocus: true, id:"inputEmail", placeholder:"メールアドレス", class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
         <div class="text-center">
           <label class="form-label fw-bold d-block">現在のプロフィール画像</label>
           <%= image_tag current_user.get_profile_image(100,100), class: "rounded-circle border mb-3 shadow-sm" %><br>
