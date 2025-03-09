@@ -2,7 +2,7 @@ class Administrator::AttendancesController < ApplicationController
   before_action :admin_user
 
   def index
-    @user = current_user
+    @user = User.find(params[:user_id])
     
     # 月をパラメータで受け取る (デフォルトは現在月)
     year_month = params[:year_month] || Time.zone.now.strftime("%Y-%m")
