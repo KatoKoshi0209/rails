@@ -2,7 +2,12 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   def after_sign_in_path_for(resource)
-    new_attendance_path
+    if current_user.administrator?
+      flash[:notice] = "管理者ユーザーとしてログインしました。"
+      administrator_users_path # 管理者なら、administrator_users_pathにリダイレクト
+    else
+      new_attendance_path
+    end
   end
 
   def after_sign_out_path_for(resource)

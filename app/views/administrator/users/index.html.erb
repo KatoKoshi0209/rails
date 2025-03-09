@@ -1,0 +1,39 @@
+<div class="container">
+  <% if flash[:notice] %>
+    <div class="alert alert-success text-center">
+      <%= flash[:notice] %>
+    </div>
+    <% elsif flash[:alert] %>
+    <div class="alert alert-danger text-center">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+  <h1>従業員一覧</h1>
+
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>名前</th>
+        <th>メールアドレス</th>
+        <th>役職</th>
+        <th>出勤簿</th>
+        <th>時給</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= user.email %></td>
+          <td><%= user.administrator? ? '管理者' : '一般ユーザー' %></td>
+          <td>
+            <%= link_to '出勤簿', administrator_user_attendances_path(user), class: 'btn btn-info' %> <!-- 出勤簿へのリンク -->
+          </td>
+          <td><%= number_to_currency(user.hourly_wage, unit: '¥', precision: 0) %></td>
+          <td><%= link_to '編集', edit_administrator_user_path(user), class: 'btn btn-primary btn-sm' %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
