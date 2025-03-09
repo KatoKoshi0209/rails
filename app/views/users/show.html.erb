@@ -13,6 +13,7 @@
     <%= image_tag @user.get_profile_image(120,120), class: "rounded-circle border shadow-sm" %>
   </div>
   <h3 class="fw-bold mb-2"><%= @user.name %></h3>
-  <p class="text-muted mb-3"><%= @user.email %></p>
+  <p class="text-muted mb-2"><%= @user.email %></p>
+  <p class="text-muted mb-3">時給 :<%= @user.hourly_wage %>円</p>
   <%= link_to "プロフィール編集", edit_user_path(current_user.id), class: "btn btn-primary w-100" %>
 </div>

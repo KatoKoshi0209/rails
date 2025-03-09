@@ -14,6 +14,11 @@
       </div>
 
       <div class="mb-3">
+        <label for="inputWage" class="form-label fw-bold">時給</label>
+        <%= f.number_field :hourly_wage, autofocus: true, id:"inputWage", placeholder:"時給", class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
         <div class="text-center">
           <label class="form-label fw-bold d-block">現在のプロフィール画像</label>
           <%= image_tag current_user.get_profile_image(100,100), class: "rounded-circle border mb-3 shadow-sm" %><br>

@@ -160,6 +160,18 @@ class AttendancesController < ApplicationController
     # 今月の勤務時間合計を計算
     total_work_time_in_seconds = @attendances_with_times.sum { |data| data[:work_time] } - @attendances_with_times.sum { |data| data[:break_time] }
     @total_work_hours, @total_work_minutes = convert_to_hours_and_minutes(total_work_time_in_seconds)
+
+    @daily_salaries = @attendances_with_times.map do |attendance_data|
+      work_hours = attendance_data[:total_work_hours]
+      work_minutes = attendance_data[:total_work_minutes] / 60.0
+      total_work_hours = work_hours + work_minutes
+      daily_salary = @user.hourly_wage * total_work_hours
+      { date: attendance_data[:attendance].attendance_time.to_date, salary: daily_salary }
+    end
+
+    total_work_time_in_hours = @total_work_hours + @total_work_minutes / 60.0
+    @monthly_salary = @user.hourly_wage * total_work_time_in_hours
+    
   end
 
   private
