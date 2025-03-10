@@ -6,9 +6,13 @@ Rails.application.routes.draw do
   namespace :administrator do
     # 管理者用ユーザー一覧
     resources :users, only: [:index, :edit, :update, :new, :create] do
-      resources :attendances, only: [:index] # ユーザーに関連した出勤簿を表示
+      resources :attendances, only: [:index] do
+        collection do
+          get :summary # これで `user_id` や `attendance_id` をURLに含めなくてもOK
+        end
+      end
     end
-  end
+  end  
 
   # 他のユーザー関連のルート
   resources :attendances, only: [:new, :create, :update, :index, :show]

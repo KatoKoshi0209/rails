@@ -76,6 +76,49 @@ class Administrator::AttendancesController < ApplicationController
     
   end
 
+  def summary
+    year_month = params[:year_month] || Time.zone.now.strftime("%Y-%m")
+    
+    unless year_month.match(/\A\d{4}-\d{2}\z/)
+      flash[:alert] = "正しく年月を選択してください"
+      redirect_to administrator_attendances_path and return
+    end
+    year, month = year_month.split('-')
+    
+    start_date = Date.new(year.to_i, month.to_i, 1)
+    end_date = start_date.end_of_month
+    
+    @monthly_salary_per_user = User.includes(:attendances).map do |user|
+      total_salary = 0
+      total_work_time = 0 # 総勤務時間（秒）
+      
+      user.attendances.where(attendance_time: start_date..end_date).each do |attendance|
+        work_time = attendance.leave_time.present? ? (attendance.leave_time - attendance.attendance_time) : 0
+        break_time = (attendance.break_start_time.present? && attendance.break_end_time.present?) ? (attendance.break_end_time - attendance.break_start_time) : 0
+        total_work_time_in_seconds = work_time - break_time
+        total_work_hours, total_work_minutes = convert_to_hours_and_minutes(total_work_time_in_seconds)
+        
+        total_salary += user.hourly_wage * (total_work_hours + total_work_minutes / 60.0)
+        total_work_time += total_work_time_in_seconds
+      end
+      
+      total_work_hours, total_work_minutes = convert_to_hours_and_minutes(total_work_time)
+  
+      { user: user, total_salary: total_salary.to_i, total_work_hours: total_work_hours, total_work_minutes: total_work_minutes }
+    end
+    
+    # 給与の多い順に並べ替え
+    @monthly_salary_per_user.sort_by! { |data| -data[:total_salary] }
+    
+    @total_monthly_salary = @monthly_salary_per_user.sum { |data| data[:total_salary] }
+    
+    # 全体の勤務時間合計
+    total_work_time_in_seconds = @monthly_salary_per_user.sum { |data| data[:total_work_hours] * 1.hour + data[:total_work_minutes] * 1.minute }
+    @total_work_hours, @total_work_minutes = convert_to_hours_and_minutes(total_work_time_in_seconds)
+  end
+  
+  
+
   private
 
   def admin_user

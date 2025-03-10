@@ -11,14 +11,16 @@ class Administrator::UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    @user.administrator = false # 新しく作成する従業員はデフォルトで一般従業員
-
+    @user.password = "password"
+  
     if @user.save
       redirect_to administrator_users_path, notice: '従業員が作成されました。'
     else
+      Rails.logger.debug "User creation failed: #{@user.errors.full_messages.join(', ')}"
       render :new
     end
   end
+  
 
   def edit
     @user = User.find(params[:id])
