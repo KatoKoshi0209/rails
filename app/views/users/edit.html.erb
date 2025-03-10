@@ -13,6 +13,11 @@
         <%= f.email_field :email, autofocus: true, id:"inputEmail", placeholder:"メールアドレス", class: "form-control" %>
       </div>
 
+      <div class="form-group mb-3">
+        <label for="inputPassword" class="form-label fw-bold">パスワード</label>
+        <%= f.password_field :encrypted_password, autofocus: true, id:"inputPassword", placeholder:"パスワード", class: "form-control" %>
+      </div>
+
       <div class="mb-3">
         <label for="inputWage" class="form-label fw-bold">時給</label>
         <%= f.number_field :hourly_wage, autofocus: true, id:"inputWage", placeholder:"時給", class: "form-control" %>

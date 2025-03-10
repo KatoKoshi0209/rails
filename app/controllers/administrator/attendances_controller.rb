@@ -117,7 +117,20 @@ class Administrator::AttendancesController < ApplicationController
     @total_work_hours, @total_work_minutes = convert_to_hours_and_minutes(total_work_time_in_seconds)
   end
   
-  
+  def edit
+    @user = User.find(params[:user_id])
+    @attendance = Attendance.find(params[:id])  # 勤怠情報を取得
+  end
+
+  def update
+    @user = User.find(params[:user_id])
+    @attendance = Attendance.find(params[:id])  # 更新対象の勤怠情報を取得
+    if @attendance.update(attendance_params)
+      redirect_to administrator_user_attendances_path, notice: "勤怠情報が更新されました"
+    else
+      render :edit
+    end
+  end
 
   private
 
@@ -130,5 +143,9 @@ class Administrator::AttendancesController < ApplicationController
     hours = (time_in_seconds / 1.hour).to_i
     minutes = ((time_in_seconds % 1.hour) / 1.minute).to_i
     return hours, minutes
+  end
+
+  def attendance_params
+    params.require(:attendance).permit(:attendance_time, :leave_time, :break_start_time, :break_end_time)
   end
 end
