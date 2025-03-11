@@ -1,0 +1,2 @@
+module ShiftRequestsHelper
+end

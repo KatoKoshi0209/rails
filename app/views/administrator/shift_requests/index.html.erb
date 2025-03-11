@@ -1,0 +1,24 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">シフト希望一覧</h2>
+
+  <table class="table table-striped table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th class="text-center">ユーザー名</th>
+        <th class="text-center">日付</th>
+        <th class="text-center">開始時間</th>
+        <th class="text-center">終了時間</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @shift_requests.each do |shift_request| %>
+        <tr>
+          <td class="text-center"><%= shift_request.user.name %></td>
+          <td class="text-center"><%= shift_request.date.strftime("%Y-%m-%d") %></td>
+          <td class="text-center"><%= shift_request.start_time.strftime("%H:%M") %></td>
+          <td class="text-center"><%= shift_request.end_time.strftime("%H:%M") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

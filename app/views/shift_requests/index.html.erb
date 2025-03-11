@@ -1,0 +1,82 @@
+<div class="container mt-4">
+  <% if flash[:notice] %>
+    <div class="alert alert-success text-center">
+      <%= flash[:notice] %>
+    </div>
+  <% elsif flash[:alert] %>
+    <div class="alert alert-danger text-center">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+  
+  <h2 class="mb-3 text-primary">シフト希望カレンダー</h2>
+
+  <!-- 年月選択フォーム -->
+  <%= form_with url: shift_requests_path, method: :get, local: true do %>
+    <div class="form-inline mb-3">
+      <%= select_tag :year, options_for_select((Date.today.year - 5..Date.today.year + 5).to_a, params[:year] || Date.today.year), class: "form-select w-auto" %>
+      <span class="mr-4">年</span>
+      <%= select_tag :month, options_for_select((1..12).to_a, params[:month] || Date.today.month), class: "form-select w-auto" %>
+      <span class="mr-4">月</span>
+      <%= submit_tag "カレンダー表示", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <table class="table table-bordered text-center">
+    <thead class="table-light">
+      <tr>
+        <% %w[日 月 火 水 木 金 土].each do |day| %>
+          <th><%= day %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% selected_year = params[:year] || Date.today.year %>
+      <% selected_month = params[:month] || Date.today.month %>
+      <% start_date = Date.new(selected_year.to_i, selected_month.to_i, 1) %>
+      <% end_date = start_date.end_of_month %>
+
+      <% (start_date..end_date).each_slice(7) do |week| %>
+        <tr>
+          <% week.each do |date| %>
+            <% shifts = current_user.shift_requests.where(date: date) %>
+            <td class="p-3 <%= 'bg-info text-white' if shifts.any? %>">
+              <%= link_to date.day, new_shift_request_path(date: date), class: "text-dark fw-bold" %>
+              <% shifts.each do |shift| %>
+                <div class="small mt-1">
+                  <span class="badge bg-light text-dark">
+                    <%= shift.start_time.strftime("%H:%M") %> - <%= shift.end_time.strftime("%H:%M") %>
+                  </span>
+                </div>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h3 class="mt-5 text-primary">シフト希望一覧</h3>
+  <table class="table table-striped">
+    <thead class="table-dark text-white">
+      <tr>
+        <th>日付</th>
+        <th>開始時間</th>
+        <th>終了時間</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @shift_requests.each do |shift| %>
+        <tr>
+          <td><%= shift.date %></td>
+          <td><%= shift.start_time.strftime("%H:%M") %></td>
+          <td><%= shift.end_time.strftime("%H:%M") %></td>
+          <td>
+            <%= link_to "削除", shift_request_path(shift), method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-danger btn-sm" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

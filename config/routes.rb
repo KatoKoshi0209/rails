@@ -12,11 +12,14 @@ Rails.application.routes.draw do
         end
       end
     end
+    # 管理者用シフト希望一覧
+    resources :shift_requests, only: [:index]
   end  
 
   # 他のユーザー関連のルート
   resources :attendances, only: [:new, :create, :update, :index, :show]
   resources :users, only: [:show, :edit, :update]
+  resources :shift_requests, only: [:index, :new, :create, :destroy]
 
   # ログイン後のリダイレクト先
   devise_scope :user do
