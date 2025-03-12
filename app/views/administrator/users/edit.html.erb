@@ -1,5 +1,5 @@
 <div class="container">
-  <h1 class="m-4">従業員情報編集</h1>
+  <h1 class="m-4 text-primary text-center" style="font-family: 'Roboto', sans-serif;">従業員情報編集</h1>
 
   <%= form_with(model: @user, url: administrator_user_path(@user), method: :put, local: true) do |f| %>
     <div class="form-group mb-3">
@@ -25,7 +25,7 @@
     </div>
 
     <div class="form-group">
-      <%= f.submit '更新', class: 'btn btn-primary btn-lg' %>
+      <%= f.submit '更新', class: 'btn btn-primary btn-lg', style: "background-color: #2864F0; border-color: #2864F0;" %>
     </div>
   <% end %>
 </div>

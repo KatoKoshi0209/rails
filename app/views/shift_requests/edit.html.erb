@@ -11,23 +11,23 @@
       </div>
     <% end %>
 
-    <h2 class="mb-4 text-primary text-center"><%= @shift_request.date %> のシフト編集</h2>
+    <h2 class="mb-4 text-center" style="color: #2864F0;"><%= @shift_request.date %> のシフト編集</h2>
 
     <%= form_with model: @shift_request, class: "needs-validation", method: :patch do |f| %>
       <%= f.hidden_field :date %>
 
       <div class="mb-3 d-flex align-items-center ml-5">
-        <label class="form-label me-3" style="width: 100px;">開始時間</label>
+        <label class="form-label me-3" style="width: 100px; color: #2864F0;">開始時間</label>
         <%= f.time_select :start_time, { minute_step: 15, selected: @shift_request.start_time }, class: "form-select w-auto" %>
       </div>
 
       <div class="mb-3 d-flex align-items-center ml-5">
-        <label class="form-label me-3" style="width: 100px;">終了時間</label>
+        <label class="form-label me-3" style="width: 100px; color: #2864F0;">終了時間</label>
         <%= f.time_select :end_time, { minute_step: 15, selected: @shift_request.end_time }, class: "form-select w-auto" %>
       </div>
 
       <div class="d-flex justify-content-center gap-2">
-        <%= f.submit "更新", class: "btn btn-primary mr-5" %>
+        <%= f.submit "更新", class: "btn", style: "background-color: #2864F0; color: white;" %>
         <%= link_to "キャンセル", shift_requests_path, class: "btn btn-secondary" %>
       </div>
     <% end %>

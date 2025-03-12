@@ -1,19 +1,19 @@
 <% if flash[:notice] %>
-  <div class="alert alert-success text-center">
+  <div class="alert alert-success text-center my-3">
     <%= flash[:notice] %>
   </div>
 <% elsif flash[:alert] %>
-  <div class="alert alert-danger text-center">
+  <div class="alert alert-danger text-center my-3">
     <%= flash[:alert] %>
   </div>
 <% end %>
 
-<div class="card shadow-sm border-0 p-4 text-center mx-auto m-4" style="max-width: 400px;">
-  <div class="mb-3">
-    <%= image_tag @user.get_profile_image(120,120), class: "rounded-circle border shadow-sm" %>
+<div class="card shadow-lg border-0 p-4 text-center mx-auto m-4" style="max-width: 400px; border-radius: 10px;">
+  <div class="mb-4">
+    <%= image_tag @user.get_profile_image(120, 120), class: "rounded-circle border shadow-sm" %>
   </div>
-  <h3 class="fw-bold mb-2"><%= @user.name %></h3>
+  <h3 class="fw-bold mb-2 text-primary"><%= @user.name %></h3>
   <p class="text-muted mb-2"><%= @user.email %></p>
-  <p class="text-muted mb-3">時給 :<%= @user.hourly_wage %>円</p>
-  <%= link_to "プロフィール編集", edit_user_path(current_user.id), class: "btn btn-primary w-100" %>
+  <p class="text-muted mb-3">時給: <%= @user.hourly_wage %>円</p>
+  <%= link_to "プロフィール編集", edit_user_path(current_user.id), class: "btn btn-primary w-100", style: "background-color: #2864F0; border-radius: 5px;" %>
 </div>

@@ -1,46 +1,40 @@
-<h2 class="m-4 text-center">プロフィール編集</h2>
+<h2 class="m-4 text-center text-primary fw-bold">プロフィール編集</h2>
 
 <div class="container">
-  <div class="card shadow-sm p-4">
+  <div class="card shadow-lg p-5">
     <%= form_with model: @user, class: "needs-validation", novalidate: true do |f| %>
-      <div class="mb-3">
+      <div class="mb-4">
         <label for="inputName" class="form-label fw-bold">名前</label>
-        <%= f.text_field :name, autofocus: true, id:"inputName", placeholder:"名前", class: "form-control" %>
+        <%= f.text_field :name, autofocus: true, id: "inputName", placeholder: "名前", class: "form-control shadow-sm" %>
       </div>
 
-      <div class="mb-3">
+      <div class="mb-4">
         <label for="inputEmail" class="form-label fw-bold">メールアドレス</label>
-        <%= f.email_field :email, autofocus: true, id:"inputEmail", placeholder:"メールアドレス", class: "form-control" %>
+        <%= f.email_field :email, autofocus: true, id: "inputEmail", placeholder: "メールアドレス", class: "form-control shadow-sm" %>
       </div>
 
-      <div class="form-group mb-3">
+      <div class="mb-4">
         <label for="inputPassword" class="form-label fw-bold">パスワード</label>
-        <%= f.password_field :encrypted_password, autofocus: true, id:"inputPassword", placeholder:"パスワード", class: "form-control" %>
+        <%= f.password_field :encrypted_password, autofocus: true, id: "inputPassword", placeholder: "パスワード", class: "form-control shadow-sm" %>
       </div>
 
-      <div class="mb-3">
-        <label for="inputWage" class="form-label fw-bold">時給</label>
-        <%= f.number_field :hourly_wage, autofocus: true, id:"inputWage", placeholder:"時給", class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
+      <div class="mb-4">
         <div class="text-center">
           <label class="form-label fw-bold d-block">現在のプロフィール画像</label>
-          <%= image_tag current_user.get_profile_image(100,100), class: "rounded-circle border mb-3 shadow-sm" %><br>
+          <%= image_tag current_user.get_profile_image(100, 100), class: "rounded-circle border mb-3 shadow-sm" %><br>
         </div>
 
         <label for="inputImage" class="form-label fw-bold">新しいプロフィール画像</label>
-        <input type="file" id="inputImage" class="form-control" accept="image/*" onchange="previewImage(event)">
+        <input type="file" id="inputImage" class="form-control shadow-sm" accept="image/*" onchange="previewImage(event)">
         
         <div class="text-center mt-3">
           <p class="text-muted small">※ 新しい画像を選択するとプレビューが表示されます</p>
-          <img id="imagePreview" class="rounded-circle border shadow-sm d-none" style="width:100px; height:100px;">
+          <img id="imagePreview" class="rounded-circle border shadow-sm d-none" style="width: 100px; height: 100px;">
         </div>
       </div>
 
-
       <div class="d-grid gap-2 mt-4">
-        <%= f.submit "変更を保存", class: "btn btn-primary btn-lg" %>
+        <%= f.submit "変更を保存", class: "btn btn-primary btn-lg shadow-lg", style: "background-color: #2864F0; border-radius: 5px;" %>
       </div>
     <% end %>
   </div>

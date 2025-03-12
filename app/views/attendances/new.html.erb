@@ -1,9 +1,9 @@
-<h2 class="text-center my-4"><%= current_user.name %> さん</h2>
+<h2 class="text-center my-4 text-primary"><%= current_user.name %> さん</h2>
 
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-6 text-center">
-      <h1 class="display-4 p-3 bg-light rounded shadow" id='myClock'></h1>
+      <h1 class="display-4 p-3 bg-white rounded shadow text-primary" id='myClock'></h1>
     </div>
   </div>
 
@@ -17,34 +17,34 @@
     </div>
   <% end %>
 
-  <div id="message" class="text-center text-success"></div>
+  <div id="message" class="text-center text-success font-weight-bold"></div>
 
   <!-- 勤怠ボタン -->
   <div class="row justify-content-center mt-3">
-    <div class="col-md-6">
-      <div class="d-flex justify-content-between gap-1">
+    <div class="col-md-8">
+      <div class="d-flex justify-content-between gap-2 flex-wrap">
         <!-- 出勤ボタン -->
         <%= form_with model: @attendance, class: "text-center" do |f| %>
           <%= f.hidden_field :attendance_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
-          <%= f.submit '出勤', id: "attendanceButton", class: 'btn btn-lg btn-primary' %>
+          <%= f.submit '出勤', id: "attendanceButton", class: 'btn btn-lg btn-primary shadow-sm' %>
         <% end %>
 
         <!-- 休憩開始ボタン -->
         <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
           <%= f.hidden_field :break_start_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
-          <%= f.submit '休憩開始', id: "breakStartButton", class: 'btn btn-lg btn-warning' %>
+          <%= f.submit '休憩開始', id: "breakStartButton", class: 'btn btn-lg btn-warning shadow-sm' %>
         <% end %>
 
         <!-- 休憩終了ボタン -->
         <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
           <%= f.hidden_field :break_end_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
-          <%= f.submit '休憩終了', id: "breakEndButton", class: 'btn btn-lg btn-info' %>
+          <%= f.submit '休憩終了', id: "breakEndButton", class: 'btn btn-lg btn-info shadow-sm' %>
         <% end %>
 
         <!-- 退勤ボタン -->
         <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
           <%= f.hidden_field :leave_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
-          <%= f.submit '退勤', id: "leaveButton", class: 'btn btn-lg btn-secondary' %>
+          <%= f.submit '退勤', id: "leaveButton", class: 'btn btn-lg btn-secondary shadow-sm' %>
         <% end %>
       </div>
     </div>

@@ -9,6 +9,40 @@
     <script src="https://kit.fontawesome.com/0ce2b1da3d.js" crossorigin="anonymous"></script>
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <style>
+      /* ナビゲーションバーの背景色と文字色 */
+      .navbar {
+        background-color: #2864F0;
+      }
+      .navbar-light .navbar-nav .nav-link {
+        color: white;
+      }
+      .navbar-light .navbar-nav .nav-link:hover {
+        color: #fff;
+        background-color: #1d4d9d;
+      }
+      /* ボタン */
+      .btn-link {
+        color: #2864F0;
+        border: 2px solid #2864F0;
+      }
+      .btn-link:hover {
+        color: white;
+        background-color: #2864F0;
+      }
+      /* ハンバーガーメニューアイコン */
+      .navbar-toggler-icon {
+        background-color: #2864F0;
+      }
+      /* ログアウトボタン */
+      .nav-link.logout {
+        color: #ff0000;
+      }
+      .nav-link.logout:hover {
+        color: white;
+        background-color: #ff0000;
+      }
+    </style>
   </head>
 
   <body class="d-flex flex-column vh-100">
@@ -22,22 +56,22 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                  <%= link_to "シフト作成", administrator_shifts_path, class: 'nav-link text-dark' %>
+                  <%= link_to "シフト作成", administrator_shifts_path, class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
-                  <%= link_to "シフト希望一覧", administrator_shift_requests_path, class: 'nav-link text-dark' %>
+                  <%= link_to "シフト希望一覧", administrator_shift_requests_path, class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
-                  <%= link_to "人件費一覧", summary_administrator_user_attendances_path(current_user), class: 'nav-link text-dark' %>
+                  <%= link_to "人件費一覧", summary_administrator_user_attendances_path(current_user), class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
-                  <%= link_to "従業員一覧", administrator_users_path, class: 'nav-link text-dark' %>
+                  <%= link_to "従業員一覧", administrator_users_path, class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
-                  <%= link_to "従業員作成", new_administrator_user_path, class: 'nav-link text-dark' %>
+                  <%= link_to "従業員作成", new_administrator_user_path, class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
-                  <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: 'nav-link text-dark' %>
+                  <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: 'nav-link logout' %>
                 </li>
               </ul>
             </div>
@@ -53,19 +87,19 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                  <%= link_to "マイページ", user_path(current_user.id), class: 'nav-link text-dark' %>
+                  <%= link_to "マイページ", user_path(current_user.id), class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
-                  <%= link_to "出勤簿", attendances_path, class: 'nav-link text-dark' %>
+                  <%= link_to "出勤簿", attendances_path, class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
-                  <%= link_to "シフト表", shifts_path, class: 'nav-link text-dark' %>
+                  <%= link_to "シフト表", shifts_path, class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
-                  <%= link_to "シフト希望", shift_requests_path, class: 'nav-link text-dark' %>
+                  <%= link_to "シフト希望", shift_requests_path, class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
-                  <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: 'nav-link text-dark' %>
+                  <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: 'nav-link logout' %>
                 </li>
               </ul>
             </div>
