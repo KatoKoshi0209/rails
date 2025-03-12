@@ -1,7 +1,7 @@
 User.create!(name: "admin",
             email: "admin@example.com",
-            password: "password",
-            password_confirmation: "password",
+            password: "k89310141",
+            password_confirmation: "k89310141",
             administrator: true)
 
 User.create!(name: "加藤航詩",

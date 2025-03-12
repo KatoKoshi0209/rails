@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   # 他のユーザー関連のルート
   resources :attendances, only: [:new, :create, :update, :index, :show]
   resources :users, only: [:show, :edit, :update]
-  resources :shift_requests, only: [:index, :new, :create, :destroy]
+  resources :shift_requests, only: [:index, :new, :create, :destroy, :edit, :update]
   resources :shifts, only: [:index]
 
   # ログイン後のリダイレクト先

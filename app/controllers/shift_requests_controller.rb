@@ -27,6 +27,38 @@ class ShiftRequestsController < ApplicationController
     redirect_to shift_requests_path, notice: 'シフト希望を削除しました'
   end
 
+  def edit
+    @shift_request = current_user.shift_requests.find(params[:id])
+  end
+
+  def update
+    @shift_request = current_user.shift_requests.find(params[:id])
+  
+    # ユーザーのタイムゾーンを使用して時間を変換
+    start_time = Time.zone.local(params[:shift_request]["start_time(1i)"].to_i,
+                                 params[:shift_request]["start_time(2i)"].to_i,
+                                 params[:shift_request]["start_time(3i)"].to_i,
+                                 params[:shift_request]["start_time(4i)"].to_i,
+                                params[:shift_request]["start_time(5i)"].to_i)
+  
+    end_time = Time.zone.local(params[:shift_request]["end_time(1i)"].to_i,
+                              params[:shift_request]["end_time(2i)"].to_i,
+                              params[:shift_request]["end_time(3i)"].to_i,
+                              params[:shift_request]["end_time(4i)"].to_i,
+                              params[:shift_request]["end_time(5i)"].to_i)
+  
+    # start_time と end_time をモデルにセット
+    @shift_request.start_time = start_time
+    @shift_request.end_time = end_time
+  
+    if @shift_request.save
+      redirect_to shift_requests_path, notice: "シフトが更新されました。"
+    else
+      render :edit, alert: "シフトの更新に失敗しました。"
+    end
+  end
+  
+
   private
 
   def shift_request_params

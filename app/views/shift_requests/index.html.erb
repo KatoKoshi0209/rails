@@ -41,42 +41,64 @@
           <% week.each do |date| %>
             <% shifts = current_user.shift_requests.where(date: date) %>
             <td class="p-3 <%= 'bg-info text-white' if shifts.any? %>">
-              <%= link_to date.day, new_shift_request_path(date: date), class: "text-dark fw-bold" %>
+              <% if shifts.any? %>
+                <%= link_to date.day, edit_shift_request_path(shifts.first), class: "text-dark fw-bold" %>
+              <% else %>
+                <%= link_to date.day, new_shift_request_path(date: date), class: "text-dark fw-bold" %>
+              <% end %>
               <% shifts.each do |shift| %>
                 <div class="small mt-1">
                   <span class="badge bg-light text-dark">
                     <%= shift.start_time.strftime("%H:%M") %> - <%= shift.end_time.strftime("%H:%M") %>
                   </span>
+                  <!-- 削除ボタン -->
+                  <%= link_to '削除', shift_request_path(shift), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger btn-sm ml-2" %>
                 </div>
               <% end %>
             </td>
           <% end %>
         </tr>
-      <% end %>
+      <% end %>      
     </tbody>
   </table>
 
-  <h3 class="mt-5 text-primary">シフト希望一覧</h3>
-  <table class="table table-striped">
-    <thead class="table-dark text-white">
-      <tr>
-        <th>日付</th>
-        <th>開始時間</th>
-        <th>終了時間</th>
-        <th>操作</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @shift_requests.each do |shift| %>
+  <!-- 日毎の予定給与表示 -->
+  <h3 class="mt-4 text-primary">日毎の予定給与</h3>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead class="thead-dark">
         <tr>
-          <td><%= shift.date %></td>
-          <td><%= shift.start_time.strftime("%H:%M") %></td>
-          <td><%= shift.end_time.strftime("%H:%M") %></td>
-          <td>
-            <%= link_to "削除", shift_request_path(shift), method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-danger btn-sm" %>
-          </td>
+          <th>日付</th>
+          <th>予定勤務時間（時間）</th>
+          <th>予定給与（円）</th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% selected_year = params[:year] || Date.today.next_month.year %>
+        <% selected_month = params[:month] || Date.today.next_month.month %>
+        <% start_date = Date.new(selected_year.to_i, selected_month.to_i, 1) %>
+        <% end_date = start_date.end_of_month %>
+        
+        <% (start_date..end_date).each do |date| %>
+          <% shifts = current_user.shift_requests.where(date: date) %>
+          <% total_hours = 0 %>
+          <% total_salary = 0 %>
+          
+          <% shifts.each do |shift| %>
+            <% work_hours = (shift.end_time - shift.start_time) / 1.hour %>
+            <% total_hours += work_hours %>
+            <% total_salary += work_hours * current_user.hourly_wage %> <!-- 仮に時給を設定して給与計算 -->
+          <% end %>
+
+          <% if total_hours > 0 %>  <!-- 勤務時間が0より大きい場合のみ表示 -->
+            <tr>
+              <td><%= date.strftime("%Y年%m月%d日") %></td>
+              <td><%= total_hours.round(2) %> 時間</td>
+              <td><%= number_to_currency(total_salary, precision: 0, unit: '¥') %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
