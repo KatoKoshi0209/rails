@@ -16,7 +16,7 @@
     <div class="form-inline mb-3">
       <%= select_tag :year, options_for_select((Date.today.year - 5..Date.today.year + 5).to_a, params[:year] || Date.today.year), class: "form-select w-auto" %>
       <span class="mr-4">年</span>
-      <%= select_tag :month, options_for_select((1..12).to_a, params[:month] || Date.today.month), class: "form-select w-auto" %>
+      <%= select_tag :month, options_for_select((1..12).to_a, params[:month] || Date.today.next_month.month), class: "form-select w-auto" %>
       <span class="mr-4">月</span>
       <%= submit_tag "カレンダー表示", class: "btn btn-primary" %>
     </div>
@@ -31,8 +31,8 @@
       </tr>
     </thead>
     <tbody>
-      <% selected_year = params[:year] || Date.today.year %>
-      <% selected_month = params[:month] || Date.today.month %>
+      <% selected_year = params[:year] || Date.today.next_month.year %>
+      <% selected_month = params[:month] || Date.today.next_month.month %>    
       <% start_date = Date.new(selected_year.to_i, selected_month.to_i, 1) %>
       <% end_date = start_date.end_of_month %>
 
