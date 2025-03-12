@@ -1,0 +1,108 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">シフトカレンダー</h2>
+
+  <!-- 年月選択フォーム -->
+  <%= form_with url: shifts_path, method: :get, local: true do %>
+    <div class="form-inline mb-3">
+      <%= select_tag :year, options_for_select((Date.today.year - 5..Date.today.year + 5).to_a, @year), class: "form-select w-auto" %>
+      <span class="mr-4">年</span>
+      <%= select_tag :month, options_for_select((1..12).to_a, @month), class: "form-select w-auto" %>
+      <span class="mr-4">月</span>
+      <%= submit_tag "カレンダー表示", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <!-- 月間予定給与合計 -->
+  <h4 class="text-center mt-4 mb-4">月間予定給与合計: 
+    <%= number_to_currency(@total_monthly_salary, precision: 0, unit: "") %> 円
+  </h4>
+
+  <table class="table table-bordered text-center">
+    <thead class="table-light">
+      <tr>
+        <% %w[日 月 火 水 木 金 土].each do |day| %>
+          <th><%= day %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% current_date = @start_date.beginning_of_week %>  <!-- 週の始まりを取得 -->
+
+      <% while current_date <= @end_date %>  <!-- 月の終わりまでループ -->
+        <tr>
+          <% 0.upto(6) do |i| %>  <!-- 1週間分を表示 -->
+            <td class="p-3">
+              <% if current_date.month == @month.to_i %> <!-- 現在の月と一致する場合のみ表示 -->
+                <span class="text-dark fw-bold"><%= current_date.day %></span>
+
+                <% # ログインユーザーのシフトがその日にあるか確認 %>
+                <% user_shift = current_user.shifts.find_by(date: current_date) %>
+                
+                <% if user_shift %>
+                  <!-- ログインユーザーのシフトがあれば、名前と時間を赤文字で表示 -->
+                  <div class="small mt-1 text-danger">
+                    <%= user_shift.user.name %> 
+                    <%= user_shift.start_time.strftime("%H:%M") %> - <%= user_shift.end_time.strftime("%H:%M") %>
+                  </div>
+                <% end %>
+
+                <% # 他のユーザーのシフトがある場合は全て表示する %>
+                <% shifts_on_day = @shifts.where(date: current_date) %>
+                <% shifts_on_day.each do |shift| %>
+                  <% unless shift.user == current_user %> <!-- ログインユーザーのシフトを除外 -->
+                    <div class="small mt-1">
+                      <span class="badge bg-light text-dark">
+                        <%= shift.user.name %> 
+                        <%= shift.start_time.strftime("%H:%M") %> - <%= shift.end_time.strftime("%H:%M") %>
+                      </span>
+                    </div>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </td>
+            <% current_date = current_date + 1.day %>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h4 class="text-center mt-4 mb-4">日別予定給与</h4>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th>日付</th>
+          <th>予定給与</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% current_date = @start_date.beginning_of_week %>  <!-- 週の始まりを取得 -->
+
+        <% while current_date <= @end_date %>  <!-- 月の終わりまでループ -->
+          <% # ログインユーザーのシフトのみを取得 %>
+          <% shifts_on_day = current_user.shifts.where(date: current_date) %> 
+          <% total_salary = 0 %>
+          
+          <% shifts_on_day.each do |shift| %>
+            <% hourly_wage = shift.user.hourly_wage || 1200 %> <!-- 時給（もし空ならデフォルトで1200円） -->
+            <% total_hours = (shift.end_time - shift.start_time) / 1.hour %> <!-- 勤務時間の計算 -->
+            <% total_salary += total_hours * hourly_wage %> <!-- その日の給与合計 -->
+          <% end %>
+
+          <% if total_salary > 0 %> <!-- 給与が0より大きい場合のみ表示 -->
+            <tr>
+              <td><%= current_date.strftime("%Y年%m月%d日") %></td>
+              <td>
+                <%= number_to_currency(total_salary, precision: 0, unit: "") %> 円
+              </td>
+            </tr>
+          <% end %>
+
+          <% current_date = current_date + 1.day %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -22,6 +22,9 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
+                  <%= link_to "シフト作成", administrator_shifts_path, class: 'nav-link text-dark' %>
+                </li>
+                <li class="nav-item">
                   <%= link_to "シフト希望一覧", administrator_shift_requests_path, class: 'nav-link text-dark' %>
                 </li>
                 <li class="nav-item">
@@ -54,6 +57,9 @@
                 </li>
                 <li class="nav-item">
                   <%= link_to "出勤簿", attendances_path, class: 'nav-link text-dark' %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "シフト表", shifts_path, class: 'nav-link text-dark' %>
                 </li>
                 <li class="nav-item">
                   <%= link_to "シフト希望", shift_requests_path, class: 'nav-link text-dark' %>
