@@ -14,19 +14,14 @@
       </div>
 
       <div class="mb-4">
-        <label for="inputPassword" class="form-label fw-bold">パスワード</label>
-        <%= f.password_field :encrypted_password, autofocus: true, id: "inputPassword", placeholder: "パスワード", class: "form-control shadow-sm" %>
-      </div>
-
-      <div class="mb-4">
         <div class="text-center">
           <label class="form-label fw-bold d-block">現在のプロフィール画像</label>
           <%= image_tag current_user.get_profile_image(100, 100), class: "rounded-circle border mb-3 shadow-sm" %><br>
         </div>
 
         <label for="inputImage" class="form-label fw-bold">新しいプロフィール画像</label>
-        <input type="file" id="inputImage" class="form-control shadow-sm" accept="image/*" onchange="previewImage(event)">
-        
+        <%= f.file_field :profile_image, accept: "image/*", class:"form-control-file user_image", onchange: "previewImage(event)" %> 
+
         <div class="text-center mt-3">
           <p class="text-muted small">※ 新しい画像を選択するとプレビューが表示されます</p>
           <img id="imagePreview" class="rounded-circle border shadow-sm d-none" style="width: 100px; height: 100px;">
