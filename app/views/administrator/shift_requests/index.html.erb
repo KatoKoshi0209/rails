@@ -1,25 +1,54 @@
 <div class="container mt-4">
-  <h2 class="text-center mb-4 text-primary" style="font-family: 'Roboto', sans-serif;">シフト希望一覧</h2>
+  <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">シフト希望一覧</h2>
 
+  <!-- 年月選択フォーム -->
+  <%= form_with url: administrator_shift_requests_path, method: :get, local: true do %>
+    <div class="d-flex justify-content-center mb-4">
+      <%= select_tag :year, options_for_select((Date.today.year - 5..Date.today.year + 5).to_a, @selected_year), class: "form-select w-auto" %>
+      <span class="align-self-center ml-2 mr-4">年</span>
+      <%= select_tag :month, options_for_select((1..12).to_a, @selected_month), class: "form-select w-auto" %>
+      <span class="align-self-center ml-2 mr-4">月</span>
+      <%= submit_tag "カレンダー表示", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <!-- カレンダー -->
   <div class="table-responsive">
-    <table class="table table-bordered table-hover" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-      <thead class="thead-dark" style="background-color: #2864F0; color: white;">
+    <table class="table table-bordered text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+      <thead class="table-light">
         <tr>
-          <th>ユーザー名</th>
-          <th>日付</th>
-          <th>開始時間</th>
-          <th>終了時間</th>
+          <% ["日", "月", "火", "水", "木", "金", "土"].each do |day| %>
+            <th class="text-uppercase font-weight-bold"><%= day %></th>
+          <% end %>
         </tr>
       </thead>
       <tbody>
-        <% @shift_requests.each do |shift_request| %>
+        <% start_date = Date.new(@selected_year.to_i, @selected_month.to_i, 1) %>
+        <% end_date = start_date.end_of_month %>
+
+        <% (start_date..end_date).each_slice(7) do |week| %>
           <tr>
-            <td><%= shift_request.user.name %></td>
-            <td><%= shift_request.date.strftime("%Y-%m-%d") %></td>
-            <td><%= shift_request.start_time.strftime("%H:%M") %></td>
-            <td><%= shift_request.end_time.strftime("%H:%M") %></td>
+            <% week.each do |date| %>
+              <% shift_requests_on_day = @shift_requests.where(date: date) %> <!-- 日付ごとのシフト希望を取得 -->
+              <td class="p-3">
+                <%= date.day %>
+
+                <!-- シフトがある場合 -->
+                <% if shift_requests_on_day.any? %> 
+                  <ul class="list-unstyled" style="font-size: 0.9rem; color: #2864F0;">
+                    <% shift_requests_on_day.each do |shift| %>
+                      <li>
+                        <strong><%= shift.user.name %>:</strong> <%= shift.start_time.strftime("%H:%M") %> - <%= shift.end_time.strftime("%H:%M") %>
+                      </li>
+                    <% end %>
+                  </ul>
+                <% else %>
+                  <span class="text-muted"></span>
+                <% end %>
+              </td>
+            <% end %>
           </tr>
-        <% end %>
+        <% end %>      
       </tbody>
     </table>
   </div>

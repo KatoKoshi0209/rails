@@ -9,15 +9,15 @@
     </div>
   <% end %>
 
-  <h2 class="mb-3 text-primary text-center" style="font-family: 'Roboto', sans-serif;">シフト作成カレンダー</h2>
+  <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">シフト作成カレンダー</h2>
 
   <!-- 年月選択フォーム -->
   <%= form_with url: administrator_shifts_path, method: :get, local: true do %>
     <div class="form-inline mb-3 justify-content-center">
       <%= select_tag :year, options_for_select((Date.today.year - 5..Date.today.year + 5).to_a, params[:year] || Date.today.year), class: "form-select w-auto" %>
-      <span class="mr-4">年</span>
+      <span class="align-self-center ml-2 mr-4">年</span>
       <%= select_tag :month, options_for_select((1..12).to_a, params[:month] || Date.today.next_month.month), class: "form-select w-auto" %>
-      <span class="mr-4">月</span>
+      <span class="align-self-center ml-2 mr-4">月</span>
       <%= submit_tag "カレンダー表示", class: "btn btn-primary", style: "background-color: #2864F0; border-color: #2864F0;" %>
     </div>
   <% end %>
@@ -27,7 +27,7 @@
     <thead class="table-light">
       <tr>
         <% %w[日 月 火 水 木 金 土].each do |day| %>
-          <th style="color: #2864F0;"><%= day %></th>
+          <th class="text-uppercase font-weight-bold"><%= day %></th>
         <% end %>
       </tr>
     </thead>
@@ -46,7 +46,7 @@
               <% if shifts.empty? %>
                 <%= link_to date.day, new_administrator_shift_path(date: date), class: "text-dark fw-bold", style:"text-decoration: none;  color: white; padding: 5px 10px; border-radius: 5px;" %>
               <% else %>
-                <%= link_to date.day, edit_administrator_shift_path(shifts.first), class: "text-dark fw-bold", style:"text-decoration: none;  color: white; padding: 5px 10px; border-radius: 5px;" %>
+                <%= link_to date.day, new_administrator_shift_path(date: date), class: "text-dark fw-bold", style:"text-decoration: none;  color: white; padding: 5px 10px; border-radius: 5px;" %>
                 <!-- シフト情報をクリックすると編集画面に遷移 -->
                 <% shifts.each do |shift| %>
                   <div class="small mt-1">

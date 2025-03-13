@@ -1,13 +1,48 @@
 class ShiftRequestsController < ApplicationController
   def index
-    # 年月を取得、指定されていなければ現在の年月を使用
-    @year = params[:year] || Date.today.year
-    @month = params[:month] || Date.today.month
-    
+    # 年月を取得、指定されていなければ翌月を使用
+    @year = params[:year] || Date.today.next_month.year
+    @month = params[:month] || Date.today.next_month.month
+  
     # シフト希望を年月でフィルタリング
     @shift_requests = current_user.shift_requests.where(date: Date.new(@year.to_i, @month.to_i, 1)..Date.new(@year.to_i, @month.to_i, -1))
+  
+    # 合計勤務時間と合計給与の計算（翌月デフォルト）
+    total_year = params[:year] || Date.today.next_month.year
+    total_month = params[:month] || Date.today.next_month.month
+    start_date = Date.new(total_year.to_i, total_month.to_i, 1)
+    end_date = start_date.end_of_month
+  
+    @total_hours = 0
+    @total_minutes = 0
+    @total_salary = 0
+  
+    shift_requests = current_user.shift_requests.where(date: start_date..end_date)
+    shift_requests.each do |shift|
+      if shift.end_time > shift.start_time
+        work_hours = ((shift.end_time - shift.start_time) / 1.hour).floor  # 小数点以下切り捨て
+        work_minutes = (((shift.end_time - shift.start_time) % 1.hour) / 1.minute).floor  # 小数点以下切り捨て
+      else
+        work_hours = 0
+        work_minutes = 0
+      end
+  
+      # 合計勤務時間（時間と分を別々に加算）
+      @total_hours += work_hours
+      @total_minutes += work_minutes
+  
+      # 合計給与
+      @total_salary += work_hours * current_user.hourly_wage
+    end
+  
+    # 分を時間に変換（60分を1時間に変換）
+    if @total_minutes >= 60
+      extra_hours = @total_minutes / 60
+      @total_hours += extra_hours
+      @total_minutes = @total_minutes % 60
+    end
   end
-
+  
   def new
     @shift_request = current_user.shift_requests.new(date: params[:date])
   end

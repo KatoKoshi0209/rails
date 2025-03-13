@@ -1,5 +1,5 @@
 <div class="container">
-  <h2 class="m-3 text-center text-primary" style="font-family: 'Roboto', sans-serif;">勤怠情報の編集</h2>
+  <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">勤怠情報の編集</h2>
 
   <%= form_with model: @attendance, url: administrator_user_attendance_path(@user, @attendance), method: :patch, local: true do |form| %>
     <div class="form-group">

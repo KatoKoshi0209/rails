@@ -4,7 +4,14 @@ class Administrator::ShiftRequestsController < ApplicationController
 
   # シフト希望一覧
   def index
-    @shift_requests = ShiftRequest.includes(:user).order(date: :asc) # 日付順にソート
+    # 年月を取得（デフォルトは翌月）
+    @selected_year = params[:year] || Date.today.next_month.year
+    @selected_month = params[:month] || Date.today.next_month.month
+
+    # シフト希望を年月でフィルタリング
+    @shift_requests = ShiftRequest.includes(:user)
+                                  .where(date: Date.new(@selected_year.to_i, @selected_month.to_i, 1)..Date.new(@selected_year.to_i, @selected_month.to_i, -1))
+                                  .order(date: :asc) # 日付順にソート
   end
 
   private

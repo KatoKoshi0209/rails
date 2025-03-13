@@ -1,13 +1,27 @@
 <div class="container my-5">
-  <h2 class="text-center mb-4"><%= @user.name %>さんの出勤簿</h2>
+  <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">
+    <%= @user.name %>さんの出勤簿
+  </h2>
 
   <!-- 今月の勤務時間合計 -->
-  <div class="alert alert-info text-center mb-4 p-4" style="border-radius: 8px; border-color: #2864F0;">
-    <h4 class="mt-3 mb-2" style="font-weight: bold;">選択した月の給与合計</h4>
-    <h4 class="display-6 text-primary"><strong><%= number_to_currency(@monthly_salary, unit: "¥", precision: 0) %></strong></h4>
-    <h4 class="mb-2" style="font-weight: bold;">選択した月の勤務時間合計</h4>
-    <h4 class="display-6 text-primary"><strong><%= "#{@total_work_hours}時間 #{@total_work_minutes}分" %></strong></h4>
+  <div class="alert alert-info text-center mb-4 p-4 shadow-sm bg-light" style="border-radius: 8px; border-color: #2864F0;">
+    <h4 class="mb-2 text-primary fw-bold">
+      <i class="fas fa-wallet"></i> 選択した月の給与合計
+    </h4>
+    <h4 class="display-5 text-primary fw-bold">
+      <%= number_to_currency(@monthly_salary, unit: "¥", precision: 0) %>
+    </h4>
+
+    <hr class="my-3" style="border-top: 2px solid #2864F0; opacity: 0.5; width: 60%; margin: auto;">
+
+    <h4 class="mt-3 mb-2 text-primary fw-bold">
+      <i class="fas fa-clock"></i> 選択した月の勤務時間合計
+    </h4>
+    <h4 class="display-5 text-primary fw-bold">
+      <%= "#{@total_work_hours}時間 #{@total_work_minutes}分" %>
+    </h4>
   </div>
+
 
   <!-- 月選択フォーム -->
   <%= form_with(url: administrator_user_attendances_path(@user), method: :get, local: true) do %>

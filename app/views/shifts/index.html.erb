@@ -1,21 +1,35 @@
 <div class="container mt-4">
   <h2 class="text-center mb-4 text-primary font-weight-bold">シフトカレンダー</h2>
 
+  <!-- 月間予定給与合計 -->
+  <div class="alert text-center mb-4 py-4 px-5 bg-light border border-primary shadow-sm">
+    <h4 class="mb-2 text-primary">
+      <i class="fas fa-yen-sign"></i> 月間予定給与合計
+    </h4>
+    <h4 class="display-5 text-primary fw-bold">
+      <%= number_to_currency(@total_monthly_salary, precision: 0, unit: "") %> 円
+    </h4>
+
+    <hr class="my-3" style="border-top: 2px solid #2864F0; opacity: 0.5; width: 60%; margin: auto;">
+
+    <h4 class="mb-2 text-primary">
+      <i class="fas fa-clock"></i> 月間予定勤務時間合計
+    </h4>
+    <h4 class="display-5 text-dark fw-bold">
+      <%= "#{@total_monthly_hours}時間 #{@total_monthly_minutes}分" %>
+    </h4>
+  </div>
+
   <!-- 年月選択フォーム -->
   <%= form_with url: shifts_path, method: :get, local: true do %>
     <div class="d-flex justify-content-center mb-4">
-      <%= select_tag :year, options_for_select((Date.today.year - 5..Date.today.year + 5).to_a, @year), class: "form-select w-auto mx-2" %>
-      <span class="align-self-center">年</span>
-      <%= select_tag :month, options_for_select((1..12).to_a, @month), class: "form-select w-auto mx-2" %>
-      <span class="align-self-center">月</span>
-      <%= submit_tag "カレンダー表示", class: "btn btn-lg text-white", style: "background-color: #2864F0; border-radius: 5px;" %>
+      <%= select_tag :year, options_for_select((Date.today.year - 5..Date.today.year + 5).to_a, @year), class: "form-select w-auto" %>
+      <span class="align-self-center ml-2 mr-4">年</span>
+      <%= select_tag :month, options_for_select((1..12).to_a, @month), class: "form-select w-auto" %>
+      <span class="align-self-center ml-2 mr-4">月</span>
+      <%= submit_tag "カレンダー表示", class: "btn text-white", style: "background-color: #2864F0; border-radius: 5px;" %>
     </div>
   <% end %>
-
-  <!-- 月間予定給与合計 -->
-  <h4 class="text-center mt-4 mb-4 text-info">月間予定給与合計: 
-    <%= number_to_currency(@total_monthly_salary, precision: 0, unit: "") %> 円
-  </h4>
 
   <div class="table-responsive">
     <table class="table table-bordered text-center">
