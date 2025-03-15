@@ -27,16 +27,16 @@
 
   <%= link_to '戻る', administrator_shifts_path, class: "btn btn-secondary mt-3", style: "background-color: #6c757d; color: white;" %>
 
-  <!-- シフト希望一覧を表示 -->
+  <!-- シフト希望一覧 -->
   <% if @shift_requests.present? %>
-    <h3 class="mt-5 text-primary text-center" style="font-family: 'Roboto', sans-serif;">シフト希望一覧（<%= @shift_date.strftime('%Y年%m月%d日') %>）</h3>
-    <div class="table-responsive mt-3">
-      <table class="table table-bordered table-hover" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <thead class="thead-dark">
+    <h3 class="mt-5 text-primary text-center">シフト希望一覧（<%= @shift_date.strftime('%Y年%m月%d日') %>）</h3>
+    <div class="table-responsive mt-3 mb-5"">
+      <table class="table table-bordered table-hover text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <thead class="bg-primary text-white">
           <tr>
-            <th>ユーザー</th>
-            <th>開始時間</th>
-            <th>終了時間</th>
+            <th scope="col">ユーザー</th>
+            <th scope="col">開始時間</th>
+            <th scope="col">終了時間</th>
           </tr>
         </thead>
         <tbody>

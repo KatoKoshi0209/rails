@@ -42,7 +42,7 @@
           <% week.each do |date| %>
             <td class="p-3">
               <!-- シフト作成画面へのリンク（シフトがなければ新規作成）-->
-              <% shifts = Shift.where(date: date) %>
+              <% shifts = Shift.where(date: date).order(:start_time) %>
               <% if shifts.empty? %>
                 <%= link_to date.day, new_administrator_shift_path(date: date), class: "text-dark fw-bold", style:"text-decoration: none;  color: white; padding: 5px 10px; border-radius: 5px;" %>
               <% else %>
@@ -67,14 +67,14 @@
 
   <!-- 予定人件費 -->
   <h3 class="mt-5 text-primary text-center" style="font-family: 'Roboto', sans-serif;">全従業員の予定人件費: <%= number_to_currency(@total_monthly_salary, precision: 0, unit: '¥') %></h3>
-  
-  <div class="table-responsive mt-4">
-    <table class="table table-bordered table-hover" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-      <thead class="thead-dark">
+
+  <div class="table-responsive mt-4 mb-5"">
+    <table class="table table-bordered table-hover text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+      <thead class="bg-primary text-white">
         <tr>
-          <th>ユーザー</th>
-          <th>予定勤務時間（時間）</th>
-          <th>予定給与（円）</th>
+          <th scope="col">ユーザー</th>
+          <th scope="col">予定勤務時間（時間）</th>
+          <th scope="col">予定給与（円）</th>
         </tr>
       </thead>
       <tbody>
@@ -82,7 +82,9 @@
           <tr>
             <td><%= schedule[:user].name %></td>
             <td><%= schedule[:total_hours].round(2) %> 時間</td>
-            <td><%= number_to_currency(schedule[:total_salary], precision: 0, unit: '¥') %></td>
+            <td class="text-primary font-weight-bold">
+              <%= number_to_currency(schedule[:total_salary], precision: 0, unit: '¥') %>
+            </td>
           </tr>
         <% end %>
       </tbody>

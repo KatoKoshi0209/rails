@@ -58,7 +58,7 @@
                     </div>
                   <% end %>
 
-                  <% shifts_on_day = @shifts.where(date: current_date) %>
+                  <% shifts_on_day = @shifts.where(date: current_date).order(:start_time) %>
                   <% shifts_on_day.each do |shift| %>
                     <% unless shift.user == current_user %>
                       <div class="small mt-2">
@@ -80,14 +80,15 @@
   </div>
 
   <!-- 日別予定給与 -->
-  <h4 class="text-center mt-4 mb-4 text-info">日別予定給与</h4>
+  <h4 class="text-center mt-4 mb-4 text-primary">日別予定給与</h4>
 
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="thead-dark">
+  <div class="table-responsive mt-5 mb-5">
+    <table class="table table-bordered table-hover text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+      <thead class="bg-primary text-white">
         <tr>
-          <th class="text-center">日付</th>
-          <th class="text-center">予定給与</th>
+          <th scope="col">日付</th>
+          <th scope="col">予定勤務時間</th>
+          <th scope="col">予定給与</th>
         </tr>
       </thead>
       <tbody>
@@ -96,17 +97,22 @@
         <% while current_date <= @end_date %>
           <% shifts_on_day = current_user.shifts.where(date: current_date) %>
           <% total_salary = 0 %>
+          <% total_work_hours = 0 %>
 
           <% shifts_on_day.each do |shift| %>
             <% hourly_wage = shift.user.hourly_wage || 1200 %> <!-- 時給（デフォルトで1200円） -->
-            <% total_hours = (shift.end_time - shift.start_time) / 1.hour %> <!-- 勤務時間 -->
-            <% total_salary += total_hours * hourly_wage %> <!-- その日の給与 -->
+            <% work_hours = (shift.end_time - shift.start_time) / 1.hour %> <!-- 勤務時間 -->
+            <% total_salary += work_hours * hourly_wage %>
+            <% total_work_hours += work_hours %>
           <% end %>
 
           <% if total_salary > 0 %>
             <tr>
               <td><%= current_date.strftime("%Y年%m月%d日") %></td>
-              <td><%= number_to_currency(total_salary, precision: 0, unit: "") %> 円</td>
+              <td><%= total_work_hours.round(2) %> 時間</td>
+              <td class="text-primary font-weight-bold">
+                <%= number_to_currency(total_salary, precision: 0, unit: "") %> 円
+              </td>
             </tr>
           <% end %>
 

@@ -44,29 +44,32 @@
   <% end %>
 
   <!-- 従業員ごとの給与と勤務時間 -->
-  <table class="table table-bordered mt-4 table-hover" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    <thead class="thead-dark" style="background-color: #2864F0; color: white;">
-      <tr>
-        <th scope="col">名前</th>
-        <th scope="col">合計給与</th>
-        <th scope="col">勤務時間</th>
-        <th scope="col">時給</th> <!-- 時給の列を追加 -->
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @monthly_salary_per_user.each do |data| %>
+  <h3 class="mt-5 text-primary">従業員ごとの給与と勤務時間</h3>
+  <div class="table-responsive mt-4 mb-5"">
+    <table class="table table-bordered table-hover text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+      <thead class="bg-primary text-white">
         <tr>
-          <td><%= data[:user].name %></td>
-          <td><%= number_to_currency(data[:total_salary], unit: "¥", precision: 0) %></td>
-          <td><%= "#{data[:total_work_hours]} 時間 #{data[:total_work_minutes]} 分" %></td>
-          <td><%= number_to_currency(data[:user].hourly_wage, unit: "¥", precision: 0) %></td> <!-- 時給の表示 -->
-          <td>
-            <%= link_to '出勤簿を確認', administrator_user_attendances_path(data[:user]), class: 'btn btn-primary', style: "background-color: #2864F0; border-color: #2864F0;" %> <!-- 出勤簿へのリンクボタン -->
-          </td>
+          <th scope="col">名前</th>
+          <th scope="col">合計給与</th>
+          <th scope="col">勤務時間</th>
+          <th scope="col">時給</th>
+          <th scope="col"></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @monthly_salary_per_user.each do |data| %>
+          <tr>
+            <td><%= data[:user].name %></td>
+            <td class="text-primary font-weight-bold"><%= number_to_currency(data[:total_salary], unit: "¥", precision: 0) %></td>
+            <td><%= "#{data[:total_work_hours]} 時間 #{data[:total_work_minutes]} 分" %></td>
+            <td><%= number_to_currency(data[:user].hourly_wage, unit: "¥", precision: 0) %></td>
+            <td>
+              <%= link_to '出勤簿を確認', administrator_user_attendances_path(data[:user]), class: 'btn btn-primary', style: "background-color: #2864F0; border-color: #2864F0;" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 
 </div>

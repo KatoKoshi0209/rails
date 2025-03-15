@@ -29,7 +29,7 @@
         <% (start_date..end_date).each_slice(7) do |week| %>
           <tr>
             <% week.each do |date| %>
-              <% shift_requests_on_day = @shift_requests.where(date: date) %> <!-- 日付ごとのシフト希望を取得 -->
+              <% shift_requests_on_day = @shift_requests.where(date: date).order(:start_time) %> <!-- 日付ごとのシフト希望を取得 -->
               <td class="p-3">
                 <%= date.day %>
 

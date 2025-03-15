@@ -43,9 +43,9 @@
   <% end %>
 
   <!-- 勤怠履歴テーブル -->
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="thead-dark" style="background-color: #2864F0; color: white;">
+  <div class="table-responsive mt-5 mb-5"">
+    <table class="table table-bordered table-hover text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+      <thead class="bg-primary text-white">
         <tr>
           <th scope="col">日付</th>
           <th scope="col">出勤時間</th>
@@ -65,24 +65,24 @@
               <% if attendance_data[:attendance].leave_time.present? %>
                 <%= attendance_data[:attendance].leave_time.strftime("%H:%M:%S") %>
               <% else %>
-                勤務中
+                <span class="badge badge-warning">勤務中</span>
               <% end %>
             </td>
             <td>
               <% if attendance_data[:break_hours] > 0 || attendance_data[:break_minutes] > 0 %>
                 <%= "#{attendance_data[:break_hours]}時間 #{attendance_data[:break_minutes]}分" %>
               <% else %>
-                休憩なし
+                <span class="badge badge-secondary">休憩なし</span>
               <% end %>
             </td>
             <td>
               <% if attendance_data[:total_work_hours] > 0 || attendance_data[:total_work_minutes] > 0 %>
                 <%= "#{attendance_data[:total_work_hours]}時間 #{attendance_data[:total_work_minutes]}分" %>
               <% else %>
-                勤務中
+                <span class="badge badge-warning">勤務中</span>
               <% end %>
             </td>
-            <td><%= number_to_currency(@daily_salaries[index][:salary], unit: "¥", precision: 0) %></td>
+            <td class="text-primary font-weight-bold"><%= number_to_currency(@daily_salaries[index][:salary], unit: "¥", precision: 0) %></td>
             <td>
               <%= link_to '編集', edit_administrator_user_attendance_path(user_id: @user.id, id: attendance_data[:attendance].id), class: "btn btn-warning btn-sm" %>
             </td>

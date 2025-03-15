@@ -83,14 +83,14 @@
   </table>
 
   <!-- 日毎の予定給与表示 -->
-  <h3 class="mt-4" style="color: #2864F0;">日毎の予定給与</h3>
+  <h3 class="mt-4 text-primary mb-5"">日毎の予定給与</h3>
   <div class="table-responsive">
-    <table class="table table-bordered">
-      <thead class="thead-dark">
+    <table class="table table-bordered table-hover text-center">
+      <thead class="bg-primary text-white">
         <tr>
-          <th>日付</th>
-          <th>予定勤務時間（時間）</th>
-          <th>予定給与（円）</th>
+          <th scope="col">日付</th>
+          <th scope="col">予定勤務時間（時間）</th>
+          <th scope="col">予定給与（円）</th>
         </tr>
       </thead>
       <tbody>
@@ -120,7 +120,9 @@
             <tr>
               <td><%= date.strftime("%Y年%m月%d日") %></td>
               <td><%= total_hours.round(2) %> 時間</td>
-              <td><%= number_to_currency(total_salary, precision: 0, unit: '¥') %></td>
+              <td class="text-primary font-weight-bold">
+                <%= number_to_currency(total_salary, precision: 0, unit: '¥') %>
+              </td>
             </tr>
           <% end %>
         <% end %>

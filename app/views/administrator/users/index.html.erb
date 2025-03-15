@@ -9,38 +9,41 @@
     </div>
   <% end %>
 
-  <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">従業員一覧</h2>
+  <!-- 従業員一覧 -->
+  <h2 class="m-4 text-center font-weight-bold text-primary">従業員一覧</h2>
 
-  <table class="table table-bordered table-hover">
-    <thead class="thead-dark">
-      <tr>
-        <th>画像</th>
-        <th>名前</th>
-        <th>メールアドレス</th>
-        <th>役職</th>
-        <th>出勤簿</th>
-        <th>時給</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @users.each do |user| %>
+  <div class="table-responsive mb-5"">
+    <table class="table table-bordered table-hover text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+      <thead class="bg-primary text-white">
         <tr>
-          <td>
-            <%= image_tag user.get_profile_image(50, 50), class: "border shadow-sm" %>
-          </td>
-          <td><%= user.name %></td>
-          <td><%= user.email %></td>
-          <td><%= user.administrator? ? '管理者' : '一般ユーザー' %></td>
-          <td>
-            <%= link_to '出勤簿', administrator_user_attendances_path(user), class: 'btn btn-info btn-sm' %> 
-          </td>
-          <td><%= number_to_currency(user.hourly_wage, unit: '¥', precision: 0) %></td>
-          <td>
-            <%= link_to '編集', edit_administrator_user_path(user), class: 'btn btn-primary btn-sm', style: "background-color: #2864F0; border-color: #2864F0;" %>
-          </td>
+          <th scope="col">画像</th>
+          <th scope="col">名前</th>
+          <th scope="col">メールアドレス</th>
+          <th scope="col">役職</th>
+          <th scope="col">出勤簿</th>
+          <th scope="col">時給</th>
+          <th scope="col"></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td>
+              <%= image_tag user.get_profile_image(50, 50), class: "border rounded-circle shadow-sm" %>
+            </td>
+            <td><%= user.name %></td>
+            <td><%= user.email %></td>
+            <td><span class="badge <%= user.administrator? ? 'badge-danger' : 'badge-secondary' %>"><%= user.administrator? ? '管理者' : '一般ユーザー' %></span></td>
+            <td>
+              <%= link_to '出勤簿', administrator_user_attendances_path(user), class: 'btn btn-info btn-sm text-white' %>
+            </td>
+            <td class="text-primary font-weight-bold"><%= number_to_currency(user.hourly_wage, unit: '¥', precision: 0) %></td>
+            <td>
+              <%= link_to '編集', edit_administrator_user_path(user), class: 'btn btn-primary btn-sm', style: "background-color: #2864F0; border-color: #2864F0;" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
