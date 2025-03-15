@@ -22,34 +22,51 @@
   <!-- 勤怠ボタン -->
   <div class="row justify-content-center mt-3">
     <div class="col-md-8">
-      <div class="d-flex justify-content-between gap-2 flex-wrap">
+      <div class="d-flex flex-column gap-3">
         <!-- 出勤ボタン -->
-        <%= form_with model: @attendance, class: "text-center" do |f| %>
-          <%= f.hidden_field :attendance_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
-          <%= f.submit '出勤', id: "attendanceButton", class: 'btn btn-lg btn-primary shadow-sm' %>
+        <% if @attendance_record.attendance_time.nil? && @attendance_record.leave_time.nil? %>
+          <%= form_with model: @attendance, class: "text-center" do |f| %>
+            <%= f.hidden_field :attendance_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
+            <%= f.submit '出勤', id: "attendanceButton", class: 'btn btn-lg btn-primary shadow-sm w-100 ' %>
+          <% end %>
         <% end %>
 
         <!-- 休憩開始ボタン -->
-        <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
-          <%= f.hidden_field :break_start_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
-          <%= f.submit '休憩開始', id: "breakStartButton", class: 'btn btn-lg btn-warning shadow-sm' %>
+        <% if @attendance_record.attendance_time.present? && @attendance_record.break_start_time.nil? && @attendance_record.leave_time.nil? %>
+          <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
+            <%= f.hidden_field :break_start_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
+            <%= f.submit '休憩開始', id: "breakStartButton", class: 'btn btn-lg btn-warning shadow-sm w-100 mb-4' %>
+          <% end %>
         <% end %>
 
         <!-- 休憩終了ボタン -->
-        <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
-          <%= f.hidden_field :break_end_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
-          <%= f.submit '休憩終了', id: "breakEndButton", class: 'btn btn-lg btn-info shadow-sm' %>
+        <% if @attendance_record.break_start_time.present? && @attendance_record.break_end_time.nil? && @attendance_record.leave_time.nil? %>
+          <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
+            <%= f.hidden_field :break_end_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
+            <%= f.submit '休憩終了', id: "breakEndButton", class: 'btn btn-lg btn-info shadow-sm w-100' %>
+          <% end %>
         <% end %>
 
         <!-- 退勤ボタン -->
-        <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
-          <%= f.hidden_field :leave_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
-          <%= f.submit '退勤', id: "leaveButton", class: 'btn btn-lg btn-secondary shadow-sm' %>
+        <% if @attendance_record.attendance_time.present? && @attendance_record.break_end_time.present? && @attendance_record.leave_time.nil? || @attendance_record.attendance_time.present? && @attendance_record.break_start_time.nil?  && @attendance_record.leave_time.nil? %>
+          <%= form_with model: @attendance_record, url: attendance_path(@attendance_record), method: :patch, class: "text-center" do |f| %>
+            <%= f.hidden_field :leave_time, value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") %>
+            <%= f.submit '退勤', id: "leaveButton", class: 'btn btn-lg btn-secondary shadow-sm w-100' %>
+          <% end %>
         <% end %>
+
+        <!-- 退勤済みの場合、ボタンを表示せずメッセージを表示 -->
+        <% if @attendance_record.leave_time.present? %>
+          <div class="alert alert-info text-center w-100">
+            本日は退勤済みです。お疲れ様でした！
+          </div>
+        <% end %>
+
       </div>
     </div>
   </div>
 </div>
+
 
 <script>
   function updateClock() {
@@ -63,18 +80,15 @@
   updateClock();
 
   function getDistance(lat1, lon1, lat2, lon2) {
-    // Haversine formula for distance calculation
-    const R = 6371000; // Earth radius in meters
+    const R = 6371000;
     const φ1 = lat1 * Math.PI / 180;
     const φ2 = lat2 * Math.PI / 180;
     const Δφ = (lat2 - lat1) * Math.PI / 180;
     const Δλ = (lon2 - lon1) * Math.PI / 180;
 
-    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-              Math.cos(φ1) * Math.cos(φ2) *
-              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in meters
+    const distance = R * c;
     return distance;
   }
 
@@ -92,63 +106,67 @@
         if (distance > 2000) {
           disableAllButtons();
           document.getElementById("message").innerHTML = "お店から2000m以内でなければ登録できません。";
-          
           document.getElementById("message").classList.remove("text-success");
           document.getElementById("message").classList.add("text-danger");
         } else {
-          // 範囲内の場合、すべてのボタンを有効化
           enableAllButtons();
           document.getElementById("message").innerHTML = "お店の範囲内です。登録可能";
-          
           document.getElementById("message").classList.remove("text-danger");
           document.getElementById("message").classList.add("text-success");
         }
       }, function(error) {
         console.log(error);
-        // 位置情報取得に失敗した場合の処理
         disableAllButtons();
         document.getElementById("message").innerHTML = "位置情報の取得に失敗しました。位置情報を許可してください。";
-        
         document.getElementById("message").classList.remove("text-success");
         document.getElementById("message").classList.add("text-danger");
       }, { enableHighAccuracy: true });
     } else {
       console.log("位置情報の取得がサポートされていません");
-      // 位置情報取得がサポートされていない場合の処理
       disableAllButtons();
       document.getElementById("message").innerHTML = "位置情報がサポートされていません。オーナーに連絡してください。";
-      
       document.getElementById("message").classList.remove("text-success");
       document.getElementById("message").classList.add("text-danger");
     }
   }
 
-  // すべてのボタンを無効化する関数
   function disableAllButtons() {
-    document.getElementById("attendanceButton").disabled = true;
-    document.getElementById("breakStartButton").disabled = true;
-    document.getElementById("breakEndButton").disabled = true;
-    document.getElementById("leaveButton").disabled = true;
+    // 出勤ボタン
+    const attendanceButton = document.getElementById("attendanceButton");
+    if (attendanceButton) attendanceButton.disabled = true;
 
-    // メッセージのクラス変更
-    document.getElementById("message").classList.remove("text-success");
-    document.getElementById("message").classList.add("text-danger");
+    // 休憩開始ボタン
+    const breakStartButton = document.getElementById("breakStartButton");
+    if (breakStartButton) breakStartButton.disabled = true;
+
+    // 休憩終了ボタン
+    const breakEndButton = document.getElementById("breakEndButton");
+    if (breakEndButton) breakEndButton.disabled = true;
+
+    // 退勤ボタン
+    const leaveButton = document.getElementById("leaveButton");
+    if (leaveButton) leaveButton.disabled = true;
   }
 
-  // すべてのボタンを有効化する関数
   function enableAllButtons() {
-    document.getElementById("attendanceButton").disabled = false;
-    document.getElementById("breakStartButton").disabled = false;
-    document.getElementById("breakEndButton").disabled = false;
-    document.getElementById("leaveButton").disabled = false;
+    // 出勤ボタン
+    const attendanceButton = document.getElementById("attendanceButton");
+    if (attendanceButton) attendanceButton.disabled = false;
 
-    // メッセージのクラス変更
-    document.getElementById("message").classList.remove("text-danger");
-    document.getElementById("message").classList.add("text-success");
+    // 休憩開始ボタン
+    const breakStartButton = document.getElementById("breakStartButton");
+    if (breakStartButton) breakStartButton.disabled = false;
+
+    // 休憩終了ボタン
+    const breakEndButton = document.getElementById("breakEndButton");
+    if (breakEndButton) breakEndButton.disabled = false;
+
+    // 退勤ボタン
+    const leaveButton = document.getElementById("leaveButton");
+    if (leaveButton) leaveButton.disabled = false;
   }
 
   window.onload = function() {
     checkLocation();
   };
-
 </script>
