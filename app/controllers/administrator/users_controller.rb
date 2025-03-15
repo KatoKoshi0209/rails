@@ -35,6 +35,12 @@ class Administrator::UsersController < ApplicationController
     end
   end
 
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+    redirect_to administrator_users_path, notice: '従業員が削除されました。'
+  end
+
   private
 
   def user_params

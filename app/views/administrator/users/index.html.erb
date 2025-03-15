@@ -12,7 +12,7 @@
   <!-- 従業員一覧 -->
   <h2 class="m-4 text-center font-weight-bold text-primary">従業員一覧</h2>
 
-  <div class="table-responsive mb-5"">
+  <div class="table-responsive mb-5">
     <table class="table table-bordered table-hover text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
       <thead class="bg-primary text-white">
         <tr>
@@ -22,6 +22,7 @@
           <th scope="col">役職</th>
           <th scope="col">出勤簿</th>
           <th scope="col">時給</th>
+          <th scope="col"></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -40,6 +41,9 @@
             <td class="text-primary font-weight-bold"><%= number_to_currency(user.hourly_wage, unit: '¥', precision: 0) %></td>
             <td>
               <%= link_to '編集', edit_administrator_user_path(user), class: 'btn btn-primary btn-sm', style: "background-color: #2864F0; border-color: #2864F0;" %>
+            </td>
+            <td>
+              <%= link_to '削除', administrator_user_path(user), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger btn-sm' %>
             </td>
           </tr>
         <% end %>
