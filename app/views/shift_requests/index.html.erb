@@ -60,7 +60,7 @@
         <tr>
           <% week.each do |date| %>
             <% shifts = current_user.shift_requests.where(date: date) %>
-            <td class="p-3 <%= 'bg-info text-white' if shifts.any? %>">
+            <td class="p-3 <%= 'text-white' if shifts.any? %>">
               <% if shifts.any? %>
                 <%= link_to date.day, edit_shift_request_path(shifts.first), class: "text-dark fw-bold" %>
               <% else %>
