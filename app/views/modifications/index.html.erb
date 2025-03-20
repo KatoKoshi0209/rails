@@ -1,6 +1,15 @@
 <div class="container mt-5">
+  <% if flash[:notice] %>
+    <div class="alert alert-success text-center">
+      <%= flash[:notice] %>
+    </div>
+  <% elsif flash[:alert] %>
+    <div class="alert alert-danger text-center">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
   <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">
-    <%= current_user.administrator? ? "全従業員の申請履歴" : "#{current_user.name}さんの申請履歴" %>
+    <%= current_user.administrator? ? "全従業員の修正申請履歴" : "#{current_user.name}さんの修正申請履歴" %>
   </h2>
   
 

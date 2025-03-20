@@ -1,0 +1,75 @@
+<div class="container mt-5">
+  <% if flash[:notice] %>
+    <div class="alert alert-success text-center">
+      <%= flash[:notice] %>
+    </div>
+  <% elsif flash[:alert] %>
+    <div class="alert alert-danger text-center">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+  <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">
+    <%= current_user.administrator? ? "全従業員の欠勤申請一覧" : "#{current_user.name}さんの欠勤申請一覧" %>
+  </h2>
+  
+  <% if @absences.any? %>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center table-hover">
+        <thead class="bg-primary text-white">
+          <tr>
+            <% if current_user.administrator? %>
+              <th>氏名</th>
+            <% end %>
+            <th>申請日</th>
+            <th>シフト日</th>
+            <th>勤務時間</th>
+            <th>状態</th>
+            <% if current_user.administrator? %>
+              <th>操作</th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @absences.each do |absence| %>
+            <tr>
+              <% if current_user.administrator? %>
+                <td><%= absence.user.name %></td>
+              <% end %>
+              <td><%= absence.created_at.strftime("%Y-%m-%d") %></td>
+              <td><%= absence.shift_date || "削除済み" %></td>
+              <td>
+                <% if absence.shift_start_time && absence.shift_end_time %>
+                  <%= absence.shift_start_time.strftime("%H:%M") %> - <%= absence.shift_end_time.strftime("%H:%M") %>
+                <% else %>
+                  <span class="text-muted">-</span>
+                <% end %>
+              </td>
+              <td>
+                <% case absence.status %>
+                  <% when 0 %> 
+                    <span class="badge badge-warning">未承認</span>
+                  <% when 1 %> 
+                    <span class="badge badge-success">承認済み</span>
+                  <% when 2 %> 
+                    <span class="badge badge-danger">却下</span>
+                <% end %>
+              </td>
+              <% if current_user.administrator? %>
+                <td>
+                  <% if absence.status == 0 %>
+                    <%= button_to "承認", approve_absence_path(absence), method: :patch, class: "btn btn-success btn-sm mb-2" %>
+                    <%= button_to "却下", reject_absence_path(absence), method: :patch, class: "btn btn-danger btn-sm" %>
+                  <% else %>
+                    <span class="text-secondary">処理済み</span>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-center text-muted">欠勤申請はありません。</p>
+  <% end %>
+</div>

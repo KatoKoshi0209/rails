@@ -29,6 +29,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :absences, only: [:index, :new, :create] do
+    member do
+      patch :approve  # 承認アクション
+      patch :reject   # 却下アクション
+    end
+  end
+
   # ログイン後のリダイレクト先
   devise_scope :user do
     root to: "devise/sessions#new"

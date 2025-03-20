@@ -51,12 +51,14 @@
                   <span class="d-block font-weight-bold text-dark"><%= current_date.day %></span>
 
                   <% user_shift = current_user.shifts.find_by(date: current_date) %>
-                  <% if user_shift %>
-                    <div class="small mt-2 text-danger">
-                      <%= user_shift.user.name %>
-                      <%= user_shift.start_time.strftime("%H:%M") %> - <%= user_shift.end_time.strftime("%H:%M") %>
-                    </div>
-                  <% end %>
+                <% if user_shift %>
+                  <div class="small mt-2 text-danger">
+                    <%= link_to "#{user_shift.start_time.strftime("%H:%M")} - #{user_shift.end_time.strftime("%H:%M")}",
+                                new_absence_path(shift_id: user_shift.id),
+                                class: "text-danger fw-bold",
+                                style: "text-decoration: none;" %>
+                  </div>
+                <% end %>
 
                   <% shifts_on_day = @shifts.where(date: current_date).order(:start_time) %>
                   <% shifts_on_day.each do |shift| %>

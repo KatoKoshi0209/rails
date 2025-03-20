@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_03_19_091831) do
+ActiveRecord::Schema.define(version: 2025_03_20_091314) do
+
+  create_table "absences", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "shift_id"
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.date "shift_date"
+    t.time "shift_start_time"
+    t.time "shift_end_time"
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
