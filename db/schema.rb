@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 2025_03_20_091314) do
     t.integer "user_id", null: false
     t.integer "shift_id"
     t.integer "status", default: 0, null: false
+    t.string "absence_reason"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.date "shift_date"
@@ -66,6 +67,7 @@ ActiveRecord::Schema.define(version: 2025_03_20_091314) do
     t.datetime "modify_leave_time", null: false
     t.datetime "modify_break_start_time"
     t.datetime "modify_break_end_time"
+    t.string "modify_reason"
     t.integer "user_id", null: false
     t.integer "attendance_id", null: false
     t.integer "status", default: 0, null: false

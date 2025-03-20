@@ -23,6 +23,7 @@
             <th>申請日</th>
             <th>シフト日</th>
             <th>勤務時間</th>
+            <th>欠勤理由</th>
             <th>状態</th>
             <% if current_user.administrator? %>
               <th>操作</th>
@@ -44,6 +45,7 @@
                   <span class="text-muted">-</span>
                 <% end %>
               </td>
+              <td><%= absence.absence_reason.present? ? absence.absence_reason : '理由なし' %></td> <!-- 欠勤理由の表示 -->
               <td>
                 <% case absence.status %>
                   <% when 0 %> 

@@ -12,7 +12,6 @@
     <%= current_user.administrator? ? "全従業員の修正申請履歴" : "#{current_user.name}さんの修正申請履歴" %>
   </h2>
   
-
   <% if @modifications.any? %>
     <p>※変更箇所は赤文字</p>
     <div class="table-responsive">
@@ -26,6 +25,7 @@
             <th>日付</th>
             <th colspan="3">修正前</th>
             <th colspan="3">修正後</th>
+            <th>修正理由</th> 
             <th>状態</th>
             <% if current_user.administrator? %>
               <th>操作</th>
@@ -82,6 +82,8 @@
                   <span class="text-muted">なし</span>
                 <% end %>
               </td>
+              <!-- 修正理由 -->
+              <td><%= modification.modify_reason.present? ? modification.modify_reason : '理由なし' %></td> <!-- 追加部分 -->
               <td>
                 <% case modification.status %>
                   <% when 0 %> 

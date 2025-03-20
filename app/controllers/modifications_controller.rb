@@ -62,7 +62,7 @@ class ModificationsController < ApplicationController
   private
   
   def modification_params
-    params.require(:modification).permit(:modify_attendance_time, :modify_leave_time, :modify_break_start_time, :modify_break_end_time, :user_id, :attendance_id)
+    params.require(:modification).permit(:modify_attendance_time, :modify_leave_time, :modify_break_start_time, :modify_break_end_time, :modify_reason, :user_id, :attendance_id)
   end
 
   def check_administrator
