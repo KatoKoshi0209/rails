@@ -6,7 +6,7 @@ class CreateAttendances < ActiveRecord::Migration[6.1]
       t.datetime :break_start_time
       t.datetime :break_end_time
       t.integer :user_id
-      t.timestamps  # これは created_at, updated_at を作るために残しておく
+      t.timestamps
     end
   end
 end

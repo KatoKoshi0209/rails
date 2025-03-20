@@ -65,6 +65,9 @@
                   <%= link_to "人件費一覧", summary_administrator_user_attendances_path(current_user), class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
+                  <%= link_to "申請一覧", modifications_path, class: 'nav-link' %>
+                </li>
+                <li class="nav-item">
                   <%= link_to "従業員一覧", administrator_users_path, class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
@@ -97,6 +100,9 @@
                 </li>
                 <li class="nav-item">
                   <%= link_to "シフト希望", shift_requests_path, class: 'nav-link' %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "申請履歴", modifications_path, class: 'nav-link' %>
                 </li>
                 <li class="nav-item">
                   <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: 'nav-link logout' %>

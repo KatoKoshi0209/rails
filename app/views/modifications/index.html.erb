@@ -1,0 +1,105 @@
+<div class="container mt-5">
+  <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">
+    <%= current_user.administrator? ? "全従業員の申請履歴" : "#{current_user.name}さんの申請履歴" %>
+  </h2>
+  
+
+  <% if @modifications.any? %>
+    <p>※変更箇所は赤文字</p>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center table-hover">
+        <thead class="bg-primary text-white">
+          <tr>
+            <% if current_user.administrator? %>
+              <th>氏名</th>
+            <% end %>
+            <th>申請日</th>
+            <th>日付</th>
+            <th colspan="3">修正前</th>
+            <th colspan="3">修正後</th>
+            <th>状態</th>
+            <% if current_user.administrator? %>
+              <th>操作</th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @modifications.each do |modification| %>
+            <tr>
+              <% if current_user.administrator? %>
+                <td><%= modification.user.name %></td>
+              <% end %>
+              <!-- 申請日 -->
+              <td><%= modification.created_at.strftime("%Y-%m-%d") %></td> 
+              <!-- 修正前の情報 -->
+              <td><%= modification.attendance.attendance_time.strftime("%m-%d") %></td>
+              <td><%= modification.attendance.attendance_time.strftime("%H:%M") %></td>
+              <td>
+                <%= modification.attendance.leave_time.strftime("%H:%M") if modification.attendance.leave_time %>
+              </td>
+              <td>
+                <% if modification.attendance.break_start_time && modification.attendance.break_end_time %>
+                  <%= modification.attendance.break_start_time.strftime("%H:%M") %> - 
+                  <%= modification.attendance.break_end_time.strftime("%H:%M") %>
+                <% else %>
+                  <span class="text-muted">なし</span>
+                <% end %>
+              </td>
+              <!-- 修正後の情報 -->
+              <td>
+                <% if modification.modify_attendance_time != modification.attendance.attendance_time %>
+                  <span class="text-danger"><%= modification.modify_attendance_time.strftime("%H:%M") %></span>
+                <% else %>
+                  <%= modification.modify_attendance_time.strftime("%H:%M") %>
+                <% end %>
+              </td>
+              <td>
+                <% if modification.modify_leave_time != modification.attendance.leave_time %>
+                  <span class="text-danger"><%= modification.modify_leave_time.strftime("%H:%M") %></span>
+                <% else %>
+                  <%= modification.modify_leave_time.strftime("%H:%M") if modification.modify_leave_time %>
+                <% end %>
+              </td>
+              <td>
+                <% if modification.modify_break_start_time && modification.modify_break_end_time %>
+                  <% if modification.modify_break_start_time != modification.attendance.break_start_time %>
+                    <span class="text-danger"><%= modification.modify_break_start_time.strftime("%H:%M") %> - 
+                    <%= modification.modify_break_end_time.strftime("%H:%M") %></span>
+                  <% else %>
+                    <%= modification.modify_break_start_time.strftime("%H:%M") %> - 
+                    <%= modification.modify_break_end_time.strftime("%H:%M") %>
+                  <% end %>
+                <% else %>
+                  <span class="text-muted">なし</span>
+                <% end %>
+              </td>
+              <td>
+                <% case modification.status %>
+                  <% when 0 %> 
+                    <span class="badge badge-warning">未承認</span>
+                  <% when 1 %> 
+                    <span class="badge badge-success">承認済み</span>
+                  <% when 2 %> 
+                    <span class="badge badge-danger">却下</span>
+                <% end %>
+              </td>
+
+              <% if current_user.administrator? %>
+                <td>
+                  <% if modification.status == 0 %>
+                    <%= button_to "承認", approve_modification_path(modification), method: :patch, class: "btn btn-success btn-sm mb-2" %>
+                    <%= button_to "却下", reject_modification_path(modification), method: :patch, class: "btn btn-danger btn-sm" %>
+                  <% else %>
+                    <span class="text-secondary">処理済み</span>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-center text-muted">修正履歴はありません。</p>
+  <% end %>
+</div>

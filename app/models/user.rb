@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
   has_many :shift_requests, dependent: :destroy
   has_many :shifts, dependent: :destroy
+  has_many :modifications, dependent: :destroy
   has_one_attached :profile_image
 
   

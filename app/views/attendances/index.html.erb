@@ -50,6 +50,7 @@
           <th scope="col">休憩時間</th>
           <th scope="col">合計勤務時間</th>
           <th scope="col">日給</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -80,6 +81,9 @@
             </td>
             <td class="text-primary font-weight-bold">
               <%= number_to_currency(@daily_salaries[index][:salary], unit: "¥", precision: 0) %>
+            </td>
+            <td>
+              <%= link_to "修正依頼", new_modification_path(attendance_id: attendance_data[:attendance].id), class: "btn btn-sm btn-warning" %>
             </td>
           </tr>
         <% end %>

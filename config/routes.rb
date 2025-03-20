@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     resources :users, only: [:index, :edit, :update, :new, :create, :destroy] do
       resources :attendances, only: [:index, :edit, :update] do
         collection do
-          get :summary # これで `user_id` や `attendance_id` をURLに含めなくてもOK
+          get :summary 
         end
       end
     end
@@ -22,6 +22,12 @@ Rails.application.routes.draw do
   resources :users, only: [:show, :edit, :update]
   resources :shift_requests, only: [:index, :new, :create, :destroy, :edit, :update]
   resources :shifts, only: [:index]
+  resources :modifications, only: [:index, :new, :create] do
+    member do
+      patch :approve  # 承認アクション
+      patch :reject   # 却下アクション
+    end
+  end
 
   # ログイン後のリダイレクト先
   devise_scope :user do

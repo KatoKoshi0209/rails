@@ -1,0 +1,30 @@
+<div class="container">
+  <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">修正依頼</h2>
+
+  <%= form_with(model: @modification, local: true) do |f| %>
+    <%= f.hidden_field :attendance_id %>
+    <div class="form-group">
+      <label>出勤時間</label>
+      <%= f.datetime_field :modify_attendance_time, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <label>退勤時間</label>
+      <%= f.datetime_field :modify_leave_time, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <label>休憩開始時間</label>
+      <%= f.datetime_field :modify_break_start_time, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <label>休憩終了時間</label>
+      <%= f.datetime_field :modify_break_end_time, class: "form-control" %>
+    </div>
+
+    <div class="form-group text-center">
+      <%= f.submit "送信", class: "btn btn-primary w-100" %>
+    </div>
+  <% end %>
+</div>
