@@ -22,10 +22,10 @@
       <%= form.time_field :end_time, class: "form-control" %>
     </div>
 
-    <%= form.submit 'シフト作成', class: "btn btn-primary", style:"background-color: #2864F0; border-color: #2864F0;" %>
+    <%= form.submit 'シフト作成', class: "btn btn-primary w-100", style:"background-color: #2864F0; border-color: #2864F0;" %>
   <% end %>
 
-  <%= link_to '戻る', administrator_shifts_path, class: "btn btn-secondary mt-3", style: "background-color: #6c757d; color: white;" %>
+  <%= link_to '戻る', administrator_shifts_path, class: "btn btn-secondary mt-3 w-100", style: "background-color: #6c757d; color: white;" %>
 
   <!-- シフト希望一覧 -->
   <% if @shift_requests.present? %>

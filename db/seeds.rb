@@ -1,3 +1,4 @@
+# ユーザー作成 (変更なし)
 User.create!(name: "admin",
             email: "admin@example.com",
             password: "k89310141",
@@ -10,7 +11,7 @@ User.create!(name: "加藤航詩",
             password_confirmation: "k89310141",
             administrator: false)
 
-# user_id 3-10のデータ
+# user_id 3-10のデータ (変更なし)
 users_data = [
   { name: "田中太郎", email: "tanaka@example.com", password: "password3", administrator: false },
   { name: "鈴木花子", email: "suzuki@example.com", password: "password4", administrator: false },
@@ -22,7 +23,6 @@ users_data = [
   { name: "中村光", email: "nakamura@example.com", password: "password10", administrator: false }
 ]
 
-# user_id 3-10のデータ作成
 users_data.each do |user|
   User.create!(name: user[:name],
               email: user[:email],
@@ -34,11 +34,11 @@ end
 require 'date'
 
 users = (2..10).to_a
-start_date = Date.today - 120  # 120日前から（約4か月分）
+start_date = Date.today - 180 
 
 attendances = []
 
-(0..119).each do |i|
+(0..179).each do |i|  # 6か月分のデータ
   date = start_date + i
 
   users.each do |user_id|
@@ -58,3 +58,72 @@ attendances = []
 end
 
 Attendance.create!(attendances)
+
+LocationSetting.create!(
+  office_name: "お店",
+  latitude: 34.723985,
+  longitude: 135.492479,
+  radius: 2010,
+  use_location_check: true
+)
+
+shift_requests_data = []
+users = User.where(administrator: false)
+
+# 今月のシフト希望データ作成
+(1..31).each do |i|  # 今月の日数分ループ
+  date = Date.today.beginning_of_month + i - 1
+
+  next if date.month != Date.today.month  # 今月の日付だけ
+
+  selected_users = users.sample(3) # 同じ日に最大3人をランダムに選ぶ
+
+  selected_users.each do |user|
+    shift_requests_data << {
+      user_id: user.id,
+      date: date,
+      start_time: Time.zone.parse("#{date} 09:00:00"),
+      end_time: Time.zone.parse("#{date} 18:00:00")
+    }
+  end
+end
+
+# 来月のシフト希望データ作成
+(1..31).each do |i|  # 来月の日数分ループ
+  date = Date.today.next_month.beginning_of_month + i - 1
+
+  next if date.month != Date.today.next_month.month  # 来月の日付だけ
+
+  selected_users = users.sample(3) # 同じ日に最大3人をランダムに選ぶ
+
+  selected_users.each do |user|
+    shift_requests_data << {
+      user_id: user.id,
+      date: date,
+      start_time: Time.zone.parse("#{date} 09:00:00"),
+      end_time: Time.zone.parse("#{date} 18:00:00")
+    }
+  end
+end
+
+# シフト希望データを作成
+ShiftRequest.create!(shift_requests_data)
+
+# Shiftダミーデータ作成
+shifts_data = []
+
+shift_requests = ShiftRequest.all.group_by(&:date)
+
+shift_requests.each do |date, shift_requests_for_date|
+  shift_requests_for_date.first(2).each do |shift_request|
+    shifts_data << {
+      user_id: shift_request.user_id,
+      date: shift_request.date,
+      start_time: shift_request.start_time,
+      end_time: shift_request.end_time,
+    }
+  end
+end
+
+# Shiftデータを作成
+Shift.create!(shifts_data)

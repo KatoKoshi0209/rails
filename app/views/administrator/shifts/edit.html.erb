@@ -22,8 +22,10 @@
       <%= form.time_field :end_time, value: @shift.end_time.strftime("%H:%M"), class: "form-control" %>
     </div>
 
-    <%= form.submit 'シフト更新', class: "btn btn-primary", style: "background-color: #2864F0; border-color: #2864F0;" %>
+    <%= form.submit 'シフト更新', class: "btn btn-primary w-100", style: "background-color: #2864F0; border-color: #2864F0;" %>
   <% end %>
 
-  <%= link_to '戻る', administrator_shifts_path, class: "btn btn-secondary mt-3", style: "background-color: #6c757d; color: white;" %>
+  <%= link_to '削除', administrator_shift_path(@shift), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger mt-3 w-100" %>
+
+  <%= link_to '戻る', administrator_shifts_path, class: "btn btn-secondary mt-3 w-100", style: "background-color: #6c757d; color: white;" %>
 </div>

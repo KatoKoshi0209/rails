@@ -13,43 +13,40 @@
   <% end %>
 
   <!-- カレンダー -->
-  <div class="table-responsive">
-    <table class="table table-bordered text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-      <thead class="table-light">
+  <table class="table table-bordered text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <thead class="table-light">
+      <tr>
+        <% ["日", "月", "火", "水", "木", "金", "土"].each do |day| %>
+          <th class="text-uppercase font-weight-bold"><%= day %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% start_date = Date.new(@selected_year.to_i, @selected_month.to_i, 1) %>
+      <% end_date = start_date.end_of_month %>
+
+      <% (start_date..end_date).each_slice(7) do |week| %>
         <tr>
-          <% ["日", "月", "火", "水", "木", "金", "土"].each do |day| %>
-            <th class="text-uppercase font-weight-bold"><%= day %></th>
+          <% week.each do |date| %>
+            <% shift_requests_on_day = @shift_requests.where(date: date).order(:start_time) %>
+            <td class="p-3">
+              <%= date.day %>
+
+              <% if shift_requests_on_day.any? %> 
+                <ul class="list-unstyled" style="font-size: 0.7rem; color: #2864F0;">
+                  <% shift_requests_on_day.each do |shift| %>
+                    <li>
+                      <strong><%= shift.user.name %>:</strong> <%= shift.start_time.strftime("%H:%M") %> - <%= shift.end_time.strftime("%H:%M") %>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <span class="text-muted"></span>
+              <% end %>
+            </td>
           <% end %>
         </tr>
-      </thead>
-      <tbody>
-        <% start_date = Date.new(@selected_year.to_i, @selected_month.to_i, 1) %>
-        <% end_date = start_date.end_of_month %>
-
-        <% (start_date..end_date).each_slice(7) do |week| %>
-          <tr>
-            <% week.each do |date| %>
-              <% shift_requests_on_day = @shift_requests.where(date: date).order(:start_time) %> <!-- 日付ごとのシフト希望を取得 -->
-              <td class="p-3">
-                <%= date.day %>
-
-                <!-- シフトがある場合 -->
-                <% if shift_requests_on_day.any? %> 
-                  <ul class="list-unstyled" style="font-size: 0.9rem; color: #2864F0;">
-                    <% shift_requests_on_day.each do |shift| %>
-                      <li>
-                        <strong><%= shift.user.name %>:</strong> <%= shift.start_time.strftime("%H:%M") %> - <%= shift.end_time.strftime("%H:%M") %>
-                      </li>
-                    <% end %>
-                  </ul>
-                <% else %>
-                  <span class="text-muted"></span>
-                <% end %>
-              </td>
-            <% end %>
-          </tr>
-        <% end %>      
-      </tbody>
-    </table>
-  </div>
+      <% end %>      
+    </tbody>
+  </table>
 </div>

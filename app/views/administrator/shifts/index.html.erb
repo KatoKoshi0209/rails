@@ -53,8 +53,6 @@
                     <span class="badge bg-light text-dark">
                       <%= link_to "#{shift.user.name} #{shift.start_time.strftime("%H:%M")}-#{shift.end_time.strftime("%H:%M")}", edit_administrator_shift_path(shift), class: "text-dark fw-bold" %>
                     </span>
-                    <!-- 削除ボタン -->
-                    <%= link_to '削除', administrator_shift_path(shift), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger btn-sm ml-2" %>
                   </div>
                 <% end %>
               <% end %>
