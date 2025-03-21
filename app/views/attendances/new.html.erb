@@ -86,47 +86,44 @@
     const Δφ = (lat2 - lat1) * Math.PI / 180;
     const Δλ = (lon2 - lon1) * Math.PI / 180;
 
-    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-    return distance;
+    return R * c;
   }
 
   function checkLocation() {
-    const officeLat = 34.723985;
-    const officeLon = 135.492479;
+    const useLocationCheck = <%= @location_setting.use_location_check %>;
+    if (!useLocationCheck) {
+      enableAllButtons();
+      return;
+    }
+
+    const officeLat = <%= @location_setting.latitude %>;
+    const officeLon = <%= @location_setting.longitude %>;
+    const officeRadius = <%= @location_setting.radius %>;
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
         const userLat = position.coords.latitude;
         const userLon = position.coords.longitude;
-
         const distance = getDistance(userLat, userLon, officeLat, officeLon);
+        console.log(userLat);
+        console.log(userLon);
+        console.log(distance);
 
-        if (distance > 2000) {
+        if (distance > officeRadius) {
+          alert(`お店から${officeRadius}m以内でなければ登録できません。`);
           disableAllButtons();
-          document.getElementById("message").innerHTML = "お店から2000m以内でなければ登録できません。";
-          document.getElementById("message").classList.remove("text-success");
-          document.getElementById("message").classList.add("text-danger");
         } else {
-          enableAllButtons();
           document.getElementById("message").innerHTML = "お店の範囲内です。登録可能";
-          document.getElementById("message").classList.remove("text-danger");
-          document.getElementById("message").classList.add("text-success");
+          enableAllButtons();
         }
       }, function(error) {
-        console.log(error);
+        alert("位置情報の取得に失敗しました。");
         disableAllButtons();
-        document.getElementById("message").innerHTML = "位置情報の取得に失敗しました。位置情報を許可してください。";
-        document.getElementById("message").classList.remove("text-success");
-        document.getElementById("message").classList.add("text-danger");
       }, { enableHighAccuracy: true });
-    } else {
-      console.log("位置情報の取得がサポートされていません");
-      disableAllButtons();
-      document.getElementById("message").innerHTML = "位置情報がサポートされていません。オーナーに連絡してください。";
-      document.getElementById("message").classList.remove("text-success");
-      document.getElementById("message").classList.add("text-danger");
     }
   }
 

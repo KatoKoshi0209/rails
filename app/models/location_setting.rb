@@ -1,0 +1,2 @@
+class LocationSetting < ApplicationRecord
+end

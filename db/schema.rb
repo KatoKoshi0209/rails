@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_03_20_091314) do
+ActiveRecord::Schema.define(version: 2025_03_21_063010) do
 
   create_table "absences", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -60,6 +60,16 @@ ActiveRecord::Schema.define(version: 2025_03_20_091314) do
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "location_settings", force: :cascade do |t|
+    t.string "office_name"
+    t.float "latitude"
+    t.float "longitude"
+    t.integer "radius"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "use_location_check"
   end
 
   create_table "modifications", force: :cascade do |t|

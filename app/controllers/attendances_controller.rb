@@ -1,5 +1,6 @@
 class AttendancesController < ApplicationController
   def new
+    @location_setting = LocationSetting.first
     @attendance = Attendance.new
     user_id = current_user.id
     today = Date.today

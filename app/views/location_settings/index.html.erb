@@ -1,0 +1,51 @@
+<div class="container mt-5">
+  <% if flash[:notice] %>
+    <div class="alert alert-success text-center">
+      <%= flash[:notice] %>
+    </div>
+  <% elsif flash[:alert] %>
+    <div class="alert alert-danger text-center">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+  <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">📍 位置情報設定一覧</h2>
+
+  <div class="table-responsive">
+    <table class="table table-bordered text-center table-hover">
+      <thead class="bg-primary text-white">
+        <tr>
+          <th>拠点名</th>
+          <th>緯度</th>
+          <th>経度</th>
+          <th>半径 (m)</th>
+          <th>位置情報チェック</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @location_settings.each do |setting| %>
+          <tr>
+            <td><%= setting.office_name %></td>
+            <td><%= setting.latitude %></td>
+            <td><%= setting.longitude %></td>
+            <td><%= setting.radius %></td>
+            <td>
+              <% if setting.use_location_check %>
+                <span class="badge badge-success">ON</span>
+              <% else %>
+                <span class="badge badge-secondary">OFF</span>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to '編集', edit_location_setting_path(setting), class: "btn btn-sm btn-primary" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-3">
+    <%= link_to '新規登録', new_location_setting_path, class: "btn btn-success w-100" %>
+  </div>
+</div>
