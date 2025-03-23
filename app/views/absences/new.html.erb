@@ -16,6 +16,11 @@
     <div class="form-group">
       <label>申請理由</label>
       <%= f.text_field :absence_reason, class: "form-control" %>
+      <% if @absence.errors[:absence_reason].any? %>
+        <div class="text-danger mt-2" style="font-weight: bold; background-color: #f8d7da; padding: 10px; border-radius: 5px;">
+          <%= @absence.errors[:absence_reason].join(", ") %>
+        </div>
+      <% end %>
     </div>
 
     <%= f.hidden_field :shift_id, value: @absence.shift&.id %>

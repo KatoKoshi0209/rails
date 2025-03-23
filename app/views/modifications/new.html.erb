@@ -3,29 +3,55 @@
 
   <%= form_with(model: @modification, local: true) do |f| %>
     <%= f.hidden_field :attendance_id %>
+
     <div class="form-group">
       <label>出勤時間</label>
       <%= f.datetime_field :modify_attendance_time, class: "form-control" %>
+      <% if @modification.errors[:modify_attendance_time].any? %>
+        <div class="text-danger mt-2" style="font-weight: bold; background-color: #f8d7da; padding: 10px; border-radius: 5px;">
+          <%= @modification.errors[:modify_attendance_time].join(", ") %>
+        </div>
+      <% end %>
     </div>
 
     <div class="form-group">
       <label>退勤時間</label>
       <%= f.datetime_field :modify_leave_time, class: "form-control" %>
+      <% if @modification.errors[:modify_leave_time].any? %>
+        <div class="text-danger mt-2" style="font-weight: bold; background-color: #f8d7da; padding: 10px; border-radius: 5px;">
+          <%= @modification.errors[:modify_leave_time].join(", ") %>
+        </div>
+      <% end %>
     </div>
 
     <div class="form-group">
       <label>休憩開始時間</label>
       <%= f.datetime_field :modify_break_start_time, class: "form-control" %>
+      <% if @modification.errors[:modify_break_start_time].any? %>
+        <div class="text-danger mt-2" style="font-weight: bold; background-color: #f8d7da; padding: 10px; border-radius: 5px;">
+          <%= @modification.errors[:modify_break_start_time].join(", ") %>
+        </div>
+      <% end %>
     </div>
 
     <div class="form-group">
       <label>休憩終了時間</label>
       <%= f.datetime_field :modify_break_end_time, class: "form-control" %>
+      <% if @modification.errors[:modify_break_end_time].any? %>
+        <div class="text-danger mt-2" style="font-weight: bold; background-color: #f8d7da; padding: 10px; border-radius: 5px;">
+          <%= @modification.errors[:modify_break_end_time].join(", ") %>
+        </div>
+      <% end %>
     </div>
 
     <div class="form-group">
       <label>申請理由</label>
       <%= f.text_field :modify_reason, class: "form-control" %>
+      <% if @modification.errors[:modify_reason].any? %>
+        <div class="text-danger mt-2" style="font-weight: bold; background-color: #f8d7da; padding: 10px; border-radius: 5px;">
+          <%= @modification.errors[:modify_reason].join(", ") %>
+        </div>
+      <% end %>
     </div>
 
     <div class="form-group text-center">

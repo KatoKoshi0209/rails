@@ -10,7 +10,9 @@ class User < ApplicationRecord
   has_many :modifications, dependent: :destroy
   has_many :absences, dependent: :destroy
   has_one_attached :profile_image
-
+  validates :name, presence: { message: "名前は必須です" }
+  validates :email, presence: { message: "メールアドレスは必須です" }
+  validates :hourly_wage, presence: { message: "時給は必須です" }
   
   def get_profile_image(width, height)
     unless profile_image.attached?

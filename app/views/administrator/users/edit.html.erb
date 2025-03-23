@@ -5,16 +5,25 @@
     <div class="form-group mb-3">
       <%= f.label :name, '氏名', class: 'form-label' %>
       <%= f.text_field :name, class: 'form-control' %>
+      <% if @user.errors[:name].any? %>
+        <div class="text-danger"><%= @user.errors[:name].first %></div>
+      <% end %>
     </div>
 
     <div class="form-group mb-3">
       <%= f.label :email, 'メールアドレス', class: 'form-label' %>
       <%= f.email_field :email, class: 'form-control' %>
+      <% if @user.errors[:email].any? %>
+        <div class="text-danger"><%= @user.errors[:email].first %></div>
+      <% end %>
     </div>
 
     <div class="form-group mb-3">
       <%= f.label :hourly_wage, '時給（円）', class: 'form-label' %>
       <%= f.number_field :hourly_wage, class: 'form-control', step: "100", min: "0" %>
+      <% if @user.errors[:hourly_wage].any? %>
+        <div class="text-danger"><%= @user.errors[:hourly_wage].first %></div>
+      <% end %>
     </div>
 
     <div class="form-group mb-3">
@@ -22,6 +31,9 @@
         <%= f.check_box :administrator, class: 'form-check-input' %>
         <%= f.label :administrator, '管理者権限', class: 'form-check-label' %>
       </div>
+      <% if @user.errors[:administrator].any? %>
+        <div class="text-danger"><%= @user.errors[:administrator].first %></div>
+      <% end %>
     </div>
 
     <div class="form-group">

@@ -5,21 +5,33 @@
     <div class="form-group">
       <%= f.label :office_name, "拠点名" %>
       <%= f.text_field :office_name, class: "form-control" %>
+      <% if @location_setting.errors[:office_name].any? %>
+        <div class="text-danger"><%= @location_setting.errors[:office_name].first %></div>
+      <% end %>
     </div>
     
     <div class="form-group">
       <%= f.label :latitude, "緯度" %>
       <%= f.text_field :latitude, class: "form-control" %>
+      <% if @location_setting.errors[:latitude].any? %>
+        <div class="text-danger"><%= @location_setting.errors[:latitude].first %></div>
+      <% end %>
     </div>
 
     <div class="form-group">
       <%= f.label :longitude, "経度" %>
       <%= f.text_field :longitude, class: "form-control" %>
+      <% if @location_setting.errors[:longitude].any? %>
+        <div class="text-danger"><%= @location_setting.errors[:longitude].first %></div>
+      <% end %>
     </div>
 
     <div class="form-group">
       <%= f.label :radius, "拠点からの距離 (m)" %>
       <%= f.number_field :radius, class: "form-control", step: 100 %>
+      <% if @location_setting.errors[:radius].any? %>
+        <div class="text-danger"><%= @location_setting.errors[:radius].first %></div>
+      <% end %>
     </div>
 
     <%= f.submit "登録", class: "btn btn-success w-100" %>

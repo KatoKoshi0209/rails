@@ -6,11 +6,21 @@
       <div class="mb-4">
         <label for="inputName" class="form-label fw-bold">名前</label>
         <%= f.text_field :name, autofocus: true, id: "inputName", placeholder: "名前", class: "form-control shadow-sm" %>
+        <% if @user.errors[:name].any? %>
+          <div class="text-danger mt-2">
+            <%= @user.errors[:name].join(", ") %>
+          </div>
+        <% end %>
       </div>
 
       <div class="mb-4">
         <label for="inputEmail" class="form-label fw-bold">メールアドレス</label>
         <%= f.email_field :email, autofocus: true, id: "inputEmail", placeholder: "メールアドレス", class: "form-control shadow-sm" %>
+        <% if @user.errors[:email].any? %>
+          <div class="text-danger mt-2">
+            <%= @user.errors[:email].join(", ") %>
+          </div>
+        <% end %>
       </div>
 
       <div class="mb-4">
@@ -34,15 +44,3 @@
     <% end %>
   </div>
 </div>
-
-<script>
-  function previewImage(event) {
-    var reader = new FileReader();
-    reader.onload = function() {
-      var output = document.getElementById('imagePreview');
-      output.src = reader.result;
-      output.classList.remove('d-none'); // プレビュー画像を表示
-    };
-    reader.readAsDataURL(event.target.files[0]);
-  }
-</script>

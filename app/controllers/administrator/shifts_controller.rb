@@ -27,6 +27,9 @@ class Administrator::ShiftsController < ApplicationController
   
     # 月ごとの予定給与合計を計算
     @total_monthly_salary = @user_schedules.sum { |schedule| schedule[:total_salary] }
+
+    # 給与順に降順でソート
+    @user_schedules.sort_by! { |schedule| -schedule[:total_salary] } 
   end
   
 

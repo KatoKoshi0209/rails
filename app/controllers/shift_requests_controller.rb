@@ -4,6 +4,9 @@ class ShiftRequestsController < ApplicationController
     @year = params[:year] || Date.today.next_month.year
     @month = params[:month] || Date.today.next_month.month
   
+    # 前月の20日を計算
+    @previous_month_20th = Date.new(@year.to_i, @month.to_i, 1).prev_month.change(day: 20)
+  
     # シフト希望を年月でフィルタリング
     @shift_requests = current_user.shift_requests.where(date: Date.new(@year.to_i, @month.to_i, 1)..Date.new(@year.to_i, @month.to_i, -1))
   
@@ -41,7 +44,7 @@ class ShiftRequestsController < ApplicationController
       @total_hours += extra_hours
       @total_minutes = @total_minutes % 60
     end
-  end
+  end  
   
   def new
     @shift_request = current_user.shift_requests.new(date: params[:date])

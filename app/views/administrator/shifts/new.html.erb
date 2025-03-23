@@ -2,24 +2,37 @@
   <h2 class="m-4 text-center font-weight-bold" style="color: #2864F0;">新しいシフトを作成</h2>
 
   <%= form_with(model: @shift, url: administrator_shifts_path, local: true) do |form| %>
+
     <div class="form-group">
       <%= form.label :user_id, 'ユーザー' %>
-      <%= form.collection_select :user_id, User.all, :id, :name, prompt: '選択してください', class: 'form-select' %>
+      <%= form.collection_select :user_id, User.joins(:shift_requests).where(shift_requests: { date: @shift_date }).distinct, :id, :name, prompt: '選択してください', class: 'form-select' %>
+      <% if @shift.errors[:user_id].any? %>
+        <div class="text-danger"><%= @shift.errors[:user_id].first %></div>
+      <% end %>
     </div>
 
     <div class="form-group">
       <%= form.label :date, 'シフト日' %>
       <%= form.text_field :date, value: @shift.date, class: "flatpickr form-control", data: { "flatpickr-enable" => true } %>
+      <% if @shift.errors[:date].any? %>
+        <div class="text-danger"><%= @shift.errors[:date].first %></div>
+      <% end %>
     </div>
 
     <div class="form-group">
       <%= form.label :start_time, '開始時間' %>
       <%= form.time_field :start_time, class: "form-control" %>
+      <% if @shift.errors[:start_time].any? %>
+        <div class="text-danger"><%= @shift.errors[:start_time].first %></div>
+      <% end %>
     </div>
 
     <div class="form-group">
       <%= form.label :end_time, '終了時間' %>
       <%= form.time_field :end_time, class: "form-control" %>
+      <% if @shift.errors[:end_time].any? %>
+        <div class="text-danger"><%= @shift.errors[:end_time].first %></div>
+      <% end %>
     </div>
 
     <%= form.submit 'シフト作成', class: "btn btn-primary w-100", style:"background-color: #2864F0; border-color: #2864F0;" %>
@@ -30,7 +43,7 @@
   <!-- シフト希望一覧 -->
   <% if @shift_requests.present? %>
     <h3 class="mt-5 text-primary text-center">シフト希望一覧（<%= @shift_date.strftime('%Y年%m月%d日') %>）</h3>
-    <div class="table-responsive mt-3 mb-5"">
+    <div class="table-responsive mt-3 mb-5">
       <table class="table table-bordered table-hover text-center" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <thead class="bg-primary text-white">
           <tr>

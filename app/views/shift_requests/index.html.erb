@@ -31,6 +31,8 @@
 
 
 
+  <% disable_links = Date.today > @previous_month_20th %> 
+
   <!-- 年月選択フォーム -->
   <%= form_with url: shift_requests_path, method: :get, local: true do %>
     <div class="d-flex justify-content-center mb-4">
@@ -41,6 +43,8 @@
       <%= submit_tag "カレンダー表示", class: "btn", style: "background-color: #2864F0; color: white;" %>
     </div>
   <% end %>
+
+  <p class="text-danger">※シフト希望は前の月の20日までに入力してください</p>
 
   <table class="table table-bordered text-center">
     <thead class="table-light">
@@ -62,17 +66,26 @@
             <% shifts = current_user.shift_requests.where(date: date) %>
             <td class="p-3 <%= 'text-white' if shifts.any? %>">
               <% if shifts.any? %>
-                <%= link_to date.day, edit_shift_request_path(shifts.first), class: "text-dark fw-bold" %>
+                <% if disable_links %>
+                  <%= link_to date.day, "#", class: "text-dark fw-bold", style: "pointer-events: none; color: #888;" %>
+                <% else %>
+                  <%= link_to date.day, edit_shift_request_path(shifts.first), class: "text-dark fw-bold" %>
+                <% end %>
               <% else %>
-                <%= link_to date.day, new_shift_request_path(date: date), class: "text-dark fw-bold" %>
+                <% if disable_links %>
+                  <%= link_to date.day, "#", class: "text-dark fw-bold", style: "pointer-events: none; color: #888;" %>
+                <% else %>
+                  <%= link_to date.day, new_shift_request_path(date: date), class: "text-dark fw-bold" %>
+                <% end %>
               <% end %>
               <% shifts.each do |shift| %>
                 <div class="small mt-1">
                   <span class="badge" style="background-color: #2864F0; color: white;">
                     <%= shift.start_time.strftime("%H:%M") %> - <%= shift.end_time.strftime("%H:%M") %>
                   </span>
-                  <!-- 削除ボタン -->
-                  <%= link_to '削除', shift_request_path(shift), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger btn-sm ml-2" %>
+                  <% unless disable_links %> 
+                    <%= link_to '削除', shift_request_path(shift), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger btn-sm ml-2" %>
+                  <% end %>
                 </div>
               <% end %>
             </td>
@@ -81,6 +94,7 @@
       <% end %>      
     </tbody>
   </table>
+
 
   <!-- 日毎の予定給与表示 -->
   <h3 class="mt-5 text-primary text-center mb-4">日別予定給与</h3>
