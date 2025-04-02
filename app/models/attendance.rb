@@ -4,7 +4,6 @@ class Attendance < ApplicationRecord
 
   # バリデーションの追加
   validates :attendance_time, presence: { message: "この項目は必須です" }
-  validates :leave_time, presence: { message: "この項目は必須です" }
 
   # 退勤時間は出勤時間より後であることを確認
   validate :leave_time_after_attendance_time
